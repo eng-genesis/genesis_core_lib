@@ -50,12 +50,10 @@ def temp_folder():
 
 @pytest.fixture()
 def sample_timeseries(temp_folder):
-    file_path = os.path.join(temp_folder, "timeseries.json")
     return TimeSeries.from_json(time_series_data)
 
 
 def test_timeseries_creation(temp_folder):
-    file_path = os.path.join(temp_folder, "timeseries.json")
     ts = TimeSeries.from_json(time_series_data)
 
     # Verify basic properties
@@ -65,7 +63,6 @@ def test_timeseries_creation(temp_folder):
 
 
 def test_timeseries_invalid_creation(temp_folder):
-    file_path = os.path.join(temp_folder, "invalid_ts.json")
     # Missing group_index
     invalid_data = [d for d in time_series_data if d["column_name"] != "experiment_id"]
 
@@ -178,7 +175,6 @@ def test_timeseries_invalid_experiment_lengths(temp_folder):
         },
     ]
 
-    file_path = os.path.join(temp_folder, "invalid_lengths.json")
     ts = TimeSeries.from_json(invalid_data)
 
     # Should raise when trying to get computing data due to inconsistent lengths

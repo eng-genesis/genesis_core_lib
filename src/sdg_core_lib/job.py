@@ -36,7 +36,7 @@ class Job:
         self.__dataset = dataset if dataset is not None else {}
         self.__n_rows = n_rows
         self.__save_filepath = save_filepath
-        self.__functions = functions if functions else []
+        self.__functions = functions if functions is not None else []
         dataset_type = self.__dataset.get("dataset_type", "")
         self.__dataset_mapping = self._get_dataset_mapping(dataset_type)
         self.__dataset_class = self.__dataset_mapping.get_dataset_class()
