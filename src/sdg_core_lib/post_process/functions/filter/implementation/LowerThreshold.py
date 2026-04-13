@@ -18,5 +18,6 @@ class LowerThreshold(MonoThreshold):
         else:
             indexes = np.greater(data, self.value)
 
-        data[indexes] = np.nan
-        return data, indexes, True
+        removed_indexes = indexes
+        data[removed_indexes] = np.nan
+        return data, removed_indexes, True

@@ -46,9 +46,9 @@ def test_apply_strict(instance_strict):
     data = np.array([1.0, 2.0, 5.0, 10.0, 11.0])
     result_data, indexes, success = instance_strict.apply(n_rows=len(data), data=data)
 
-    # Current implementation sets values outside interval (<= 2.0 or >= 10.0) to NaN (incorrect behavior)
-    expected_data = np.array([np.nan, np.nan, 5.0, np.nan, np.nan])
-    expected_indexes = np.array([True, True, False, True, True])
+    # OuterThreshold removes values inside interval (2.0 < x < 10.0)
+    expected_data = np.array([1.0, 2.0, np.nan, 10.0, 11.0])
+    expected_indexes = np.array([False, False, True, False, False])
 
     np.testing.assert_array_equal(result_data, expected_data)
     np.testing.assert_array_equal(indexes, expected_indexes)
@@ -62,9 +62,9 @@ def test_apply_non_strict(instance_non_strict):
         n_rows=len(data), data=data
     )
 
-    # Current implementation sets values outside interval (< 2.0 or > 10.0) to NaN (incorrect behavior)
-    expected_data = np.array([np.nan, 2.0, 5.0, 10.0, np.nan])
-    expected_indexes = np.array([True, False, False, False, True])
+    # OuterThreshold removes values inside interval (2.0 <= x <= 10.0)
+    expected_data = np.array([1.0, np.nan, np.nan, np.nan, 11.0])
+    expected_indexes = np.array([False, True, True, True, False])
 
     np.testing.assert_array_equal(result_data, expected_data)
     np.testing.assert_array_equal(indexes, expected_indexes)
@@ -84,9 +84,11 @@ def test_apply_edge_cases(instance_strict):
     result_data, indexes, success = instance_strict.apply(
         n_rows=len(inside_data), data=inside_data
     )
-    # Current implementation keeps all values (none meet threshold)
-    np.testing.assert_array_equal(result_data, inside_data)
-    assert not np.all(indexes)
+    # OuterThreshold removes all values inside interval
+    expected_data = np.array([np.nan, np.nan, np.nan])
+    expected_indexes = np.array([True, True, True])
+    np.testing.assert_array_equal(result_data, expected_data)
+    np.testing.assert_array_equal(indexes, expected_indexes)
     assert success is True
 
     # Test with all values outside interval
@@ -94,10 +96,11 @@ def test_apply_edge_cases(instance_strict):
     result_data, indexes, success = instance_strict.apply(
         n_rows=len(outside_data), data=outside_data
     )
-    # Current implementation sets all values to NaN
-    expected_data = np.array([np.nan, np.nan])
+    # OuterThreshold keeps all values (none to remove)
+    expected_data = np.array([1.0, 11.0])
+    expected_indexes = np.array([False, False])
     np.testing.assert_array_equal(result_data, expected_data)
-    assert np.all(indexes)
+    np.testing.assert_array_equal(indexes, expected_indexes)
     assert success is True
 
 

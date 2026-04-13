@@ -25,6 +25,6 @@ class OuterThreshold(IntervalThreshold):
         else:
             lower_indexes = np.less(data, self.lower_bound)
         final_indexes = lower_indexes | upper_indexes
-
-        data[final_indexes] = np.nan
-        return data, final_indexes, True
+        removed_indexes = ~final_indexes
+        data[removed_indexes] = np.nan
+        return data, removed_indexes, True

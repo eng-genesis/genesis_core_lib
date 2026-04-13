@@ -511,3 +511,71 @@ def test_different_dataset_types_same_model():
     assert isinstance(table_processor.strategy, TabularVAEPreprocessingStrategy)
     # TimeSeriesVAE strategy should only be used with TimeSeriesVAE model
     assert isinstance(ts_processor.strategy, TabularVAEPreprocessingStrategy)
+
+
+def test_tabular_function_applier_with_inner_threshold():
+    """Test TabularFunctionApplier with InnerThreshold function payload"""
+    from sdg_core_lib.post_process.TabularFunctionApplier import TabularFunctionApplier
+    from sdg_core_lib.dataset.datasets import Table
+    import numpy as np
+
+    # Create test payload
+    functions_payload = [
+        {
+            "feature": "fixed_acidity",
+            "function_reference": "sdg_core_lib.post_process.functions.filter.implementation.InnerThreshold.InnerThreshold",
+            "parameters": [
+                {"name": "lower_bound", "value": "6.0", "parameter_type": "float"},
+                {"name": "upper_bound", "value": "9.0", "parameter_type": "float"},
+                {"name": "lower_strict", "value": "True", "parameter_type": "bool"},
+                {"name": "upper_strict", "value": "True", "parameter_type": "bool"},
+            ],
+        }
+    ]
+
+    # Create test dataset with fixed_acidity feature
+    test_data = [
+        {
+            "column_name": "fixed_acidity",
+            "column_data": [
+                5.0,
+                6.5,
+                7.0,
+                8.5,
+                10.0,
+            ],  # Values outside and inside range
+            "column_datatype": "float32",
+            "column_type": "continuous",
+        },
+        {
+            "column_name": "volatile_acidity",
+            "column_data": [0.5, 0.6, 0.7, 0.8, 0.9],
+            "column_datatype": "float32",
+            "column_type": "continuous",
+        },
+    ]
+
+    # Create TabularFunctionApplier instance
+    applier = TabularFunctionApplier(
+        function_feature_dict=functions_payload, n_rows=5, from_scratch=False
+    )
+
+    # Create test dataset
+    dataset = Table.from_json(test_data)
+
+    # Apply functions
+    result_dataset = applier.apply_all(dataset)
+
+    # Verify results
+    result_json = result_dataset.to_json()
+
+    # Check that fixed_acidity was filtered (values 6.5, 7.0, 8.5 should remain after removing rows with NaN)
+    fixed_acidity_data = result_json[0]["column_data"]
+    logger.info(fixed_acidity_data)
+    assert fixed_acidity_data == [6.5, 7.0, 8.5]  # Only values within range 6-9 remain
+
+    # Check that volatile_acidity was also filtered to match the remaining rows
+    volatile_acidity_data = result_json[1]["column_data"]
+    assert np.allclose(
+        volatile_acidity_data, [0.6, 0.7, 0.8]
+    )  # Corresponding rows to kept fixed_acidity values

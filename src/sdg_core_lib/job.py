@@ -1,4 +1,5 @@
 from typing import Optional, Type
+from loguru import logger
 
 from sdg_core_lib.data_generator.models.UnspecializedModel import UnspecializedModel
 from sdg_core_lib.dataset.datasets import Dataset
@@ -108,7 +109,8 @@ class Job:
         )
         try:
             filtered_synthetic_data = function_generator.apply_all(synthetic_data)
-        except TypeError:
+        except (TypeError, ValueError) as e:
+            logger.error(f"Unable to apply functions to data: {e}")
             filtered_synthetic_data = synthetic_data
 
         report = {"available": "false"}

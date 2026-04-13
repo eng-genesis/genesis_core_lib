@@ -21,17 +21,36 @@ class TabularFunctionApplier:
 
     def _initialize(self):
         feature_function_mapping = {}
+        logger.info(
+            f"Initializing with function_feature_dict: {self.function_feature_dict}"
+        )
+
         for item in self.function_feature_dict:
             feature = item["feature"]
+            logger.debug(f"Processing function for feature: {feature}")
+
             if feature not in feature_function_mapping.keys():
                 feature_function_mapping[feature] = []
 
-            feature_function_mapping[feature].append(function_factory(item))
+            try:
+                function_instance = function_factory(item)
+                logger.debug(
+                    f"Successfully created function: {function_instance.__class__.__name__}"
+                )
+                feature_function_mapping[feature].append(function_instance)
+            except Exception as e:
+                logger.error(f"Failed to create function for feature {feature}: {e}")
+                logger.error(f"Function item: {item}")
+                raise
 
         for feature, functions in feature_function_mapping.items():
             functions.sort(key=lambda x: x.priority.value, reverse=True)
+            logger.debug(f"Sorted {len(functions)} functions for feature {feature}")
 
         self.function_feature_mapping = feature_function_mapping
+        logger.info(
+            f"Final function mapping: {list(self.function_feature_mapping.keys())}"
+        )
 
     def apply_all(self, dataset: Optional[Dataset] = None) -> Dataset:
         """
@@ -141,9 +160,11 @@ class TabularFunctionApplier:
         data_array = []
         unmapped_features = []
 
-        logger.info(f"Available features in dataset: {[f['column_name'] for f in json_structure]}")
+        logger.info(
+            f"Available features in dataset: {[f['column_name'] for f in json_structure]}"
+        )
         logger.info(f"Function mapping: {list(self.function_feature_mapping.keys())}")
-        
+
         for feature in json_structure:
             feature_name = feature["column_name"]
             logger.debug(f"Processing feature: {feature_name}")
@@ -151,8 +172,10 @@ class TabularFunctionApplier:
             if feature_name in self.function_feature_mapping:
                 logger.info(f"Found functions for feature: {feature_name}")
                 functions = self.function_feature_mapping[feature_name]
-                logger.debug(f"Functions to apply: {[f.__class__.__name__ for f in functions]}")
-                
+                logger.debug(
+                    f"Functions to apply: {[f.__class__.__name__ for f in functions]}"
+                )
+
                 try:
                     self._validate_function_sequence(functions, from_scratch=False)
                 except Exception as e:
@@ -160,7 +183,9 @@ class TabularFunctionApplier:
                     raise
 
                 feature_data = np.array(feature["column_data"])
-                logger.debug(f"Original data shape: {feature_data.shape}, dtype: {feature_data.dtype}")
+                logger.debug(
+                    f"Original data shape: {feature_data.shape}, dtype: {feature_data.dtype}"
+                )
                 original_shape = feature_data.shape
 
                 for function in functions:
@@ -171,11 +196,15 @@ class TabularFunctionApplier:
                         continue
 
                     try:
-                        logger.debug(f"Applying {function.__class__.__name__} to {feature_name}")
+                        logger.debug(
+                            f"Applying {function.__class__.__name__} to {feature_name}"
+                        )
                         feature_data, indexes, success = function.apply(
                             n_rows=self.n_rows, data=feature_data
                         )
-                        logger.debug(f"Function result: success={success}, indexes_sum={indexes.sum()}")
+                        logger.debug(
+                            f"Function result: success={success}, indexes_sum={indexes.sum()}"
+                        )
                         if not success:
                             logger.warning(
                                 f"Function {function.__class__.__name__} failed to apply successfully"
