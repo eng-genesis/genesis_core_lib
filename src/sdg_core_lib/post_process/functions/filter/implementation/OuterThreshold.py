@@ -7,7 +7,7 @@ from sdg_core_lib.post_process.functions.filter.IntervalThreshold import (
 
 
 class OuterThreshold(IntervalThreshold):
-    description = "Filters data outside a given interval"
+    description = "Keeps data outside a given interval"
 
     def __init__(self, parameters: list[Parameter]):
         super().__init__(parameters)

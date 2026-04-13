@@ -141,14 +141,26 @@ class TabularFunctionApplier:
         data_array = []
         unmapped_features = []
 
+        logger.info(f"Available features in dataset: {[f['column_name'] for f in json_structure]}")
+        logger.info(f"Function mapping: {list(self.function_feature_mapping.keys())}")
+        
         for feature in json_structure:
             feature_name = feature["column_name"]
+            logger.debug(f"Processing feature: {feature_name}")
 
             if feature_name in self.function_feature_mapping:
+                logger.info(f"Found functions for feature: {feature_name}")
                 functions = self.function_feature_mapping[feature_name]
-                self._validate_function_sequence(functions, from_scratch=False)
+                logger.debug(f"Functions to apply: {[f.__class__.__name__ for f in functions]}")
+                
+                try:
+                    self._validate_function_sequence(functions, from_scratch=False)
+                except Exception as e:
+                    logger.error(f"Validation failed for {feature_name}: {e}")
+                    raise
 
                 feature_data = np.array(feature["column_data"])
+                logger.debug(f"Original data shape: {feature_data.shape}, dtype: {feature_data.dtype}")
                 original_shape = feature_data.shape
 
                 for function in functions:
@@ -159,9 +171,11 @@ class TabularFunctionApplier:
                         continue
 
                     try:
+                        logger.debug(f"Applying {function.__class__.__name__} to {feature_name}")
                         feature_data, indexes, success = function.apply(
                             n_rows=self.n_rows, data=feature_data
                         )
+                        logger.debug(f"Function result: success={success}, indexes_sum={indexes.sum()}")
                         if not success:
                             logger.warning(
                                 f"Function {function.__class__.__name__} failed to apply successfully"
@@ -182,6 +196,7 @@ class TabularFunctionApplier:
                 modified_features.add(feature_name)
             else:
                 # Preserve unmapped features
+                logger.debug(f"No function mapping for feature: {feature_name}")
                 data_array.append(np.array(feature["column_data"]))
                 unmapped_features.append(feature_name)
 
