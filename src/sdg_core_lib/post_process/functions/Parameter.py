@@ -17,10 +17,17 @@ class Parameter:
 
     @staticmethod
     def _convert_type(stringed_value: str, parameter_type: str):
-        try:
-            converted_value = ast.literal_eval(stringed_value)
-        except ValueError:
-            converted_value = stringed_value
+
+        converted_value = stringed_value
+        # Convert to target type if needed
+        if parameter_type == "float":
+            converted_value = float(stringed_value)
+        elif parameter_type == "int":
+            converted_value = int(stringed_value)
+        elif parameter_type == "bool":
+            converted_value = bool(stringed_value)
+        
+        # Validate final type
         target_type = getattr(builtins, parameter_type)
         if not isinstance(converted_value, target_type):
             raise ValueError(
