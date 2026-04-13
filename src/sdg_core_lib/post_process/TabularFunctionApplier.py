@@ -131,7 +131,7 @@ class TabularFunctionApplier:
         Raises:
             ValueError: If data compatibility issues arise
         """
-        if not type(dataset) is Table:
+        if type(dataset) is not Table:
             # TODO: support other dataset types
             logger.error("Only Table datasets are currently supported")
             raise TypeError("Only Table datasets are currently supported")
