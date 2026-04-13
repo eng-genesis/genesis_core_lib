@@ -1,6 +1,7 @@
 import builtins
 import ast
 
+
 class Parameter:
     def __init__(self, name: str, value: str, parameter_type: str):
         self.name = name
@@ -28,7 +29,7 @@ class Parameter:
                 converted_value = float(stringed_value)
             elif parameter_type == "int":
                 converted_value = int(stringed_value)
-        
+
         # Validate final type
         target_type = getattr(builtins, parameter_type)
         if not isinstance(converted_value, target_type):
