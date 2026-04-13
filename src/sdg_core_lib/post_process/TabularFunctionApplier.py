@@ -5,7 +5,12 @@ from loguru import logger
 from typing import Optional
 
 
-class FunctionApplier:
+class TabularFunctionApplier:
+    """
+    A class to apply functions to datasets.
+    WARNING: this class is under construction. New dataset types will be supported in the future.
+    """
+
     def __init__(
         self, function_feature_dict: list[dict], n_rows: int, from_scratch: bool = False
     ):
@@ -126,7 +131,9 @@ class FunctionApplier:
         Raises:
             ValueError: If data compatibility issues arise
         """
-        if not isinstance(dataset, Table):
+        if not type(dataset) is Table:
+            # TODO: support other dataset types
+            logger.error("Only Table datasets are currently supported")
             raise TypeError("Only Table datasets are currently supported")
 
         json_structure = dataset.to_json()

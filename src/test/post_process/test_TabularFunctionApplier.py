@@ -2,7 +2,7 @@ import pytest
 import numpy as np
 from unittest.mock import patch
 
-from sdg_core_lib.post_process.FunctionApplier import FunctionApplier
+from sdg_core_lib.post_process.TabularFunctionApplier import TabularFunctionApplier
 from sdg_core_lib.dataset.datasets import Table
 from sdg_core_lib.post_process.functions.generation.implementation.NormalDistributionSample import (
     NormalDistributionSample,
@@ -61,7 +61,7 @@ class TestFunctionApplier:
 
     def test_init_from_scratch(self, generative_function_dict):
         """Test initialization for from_scratch mode."""
-        applier = FunctionApplier(
+        applier = TabularFunctionApplier(
             function_feature_dict=[generative_function_dict],
             n_rows=100,
             from_scratch=True,
@@ -74,7 +74,7 @@ class TestFunctionApplier:
 
     def test_init_modification_mode(self, modification_function_dict):
         """Test initialization for modification mode."""
-        applier = FunctionApplier(
+        applier = TabularFunctionApplier(
             function_feature_dict=[modification_function_dict],
             n_rows=100,
             from_scratch=False,
@@ -94,7 +94,7 @@ class TestFunctionApplier:
         mod_dict = modification_function_dict.copy()
         mod_dict["feature"] = "shared_feature"
 
-        applier = FunctionApplier(
+        applier = TabularFunctionApplier(
             function_feature_dict=[gen_dict, mod_dict],
             n_rows=100,
             from_scratch=True,
@@ -107,7 +107,7 @@ class TestFunctionApplier:
 
     def test_apply_all_from_scratch_success(self, generative_function_dict):
         """Test successful generation from scratch."""
-        applier = FunctionApplier(
+        applier = TabularFunctionApplier(
             function_feature_dict=[generative_function_dict],
             n_rows=50,
             from_scratch=True,
@@ -124,7 +124,7 @@ class TestFunctionApplier:
         self, modification_function_dict, sample_dataset
     ):
         """Test successful modification of existing dataset."""
-        applier = FunctionApplier(
+        applier = TabularFunctionApplier(
             function_feature_dict=[modification_function_dict],
             n_rows=5,
             from_scratch=False,
@@ -152,7 +152,7 @@ class TestFunctionApplier:
 
     def test_apply_all_missing_dataset_error(self, modification_function_dict):
         """Test error when dataset is missing in modification mode."""
-        applier = FunctionApplier(
+        applier = TabularFunctionApplier(
             function_feature_dict=[modification_function_dict],
             n_rows=100,
             from_scratch=False,
@@ -168,7 +168,7 @@ class TestFunctionApplier:
     ):
         """Test error when first function is not generative in from_scratch mode."""
         # Use modification function (non-generative) as first function
-        applier = FunctionApplier(
+        applier = TabularFunctionApplier(
             function_feature_dict=[modification_function_dict],
             n_rows=100,
             from_scratch=True,
@@ -183,7 +183,7 @@ class TestFunctionApplier:
         """Test error when multiple generative functions are provided."""
         gen_dict2 = generative_function_dict.copy()
 
-        applier = FunctionApplier(
+        applier = TabularFunctionApplier(
             function_feature_dict=[generative_function_dict, gen_dict2],
             n_rows=100,
             from_scratch=True,
@@ -210,13 +210,15 @@ class TestFunctionApplier:
             ],
         }
 
-        applier = FunctionApplier(
+        applier = TabularFunctionApplier(
             function_feature_dict=[function_dict],
             n_rows=5,
             from_scratch=False,
         )
 
-        with patch("sdg_core_lib.post_process.FunctionApplier.logger") as mock_logger:
+        with patch(
+            "sdg_core_lib.post_process.TabularFunctionApplier.logger"
+        ) as mock_logger:
             _ = applier.apply_all(dataset=sample_dataset)
 
             # Check that unmapped feature preservation was logged
@@ -231,7 +233,7 @@ class TestFunctionApplier:
             np.array([[5], [6]]),
         ]
 
-        result = FunctionApplier._safe_concatenate(arrays)
+        result = TabularFunctionApplier._safe_concatenate(arrays)
 
         expected = np.array([[1, 2, 5], [3, 4, 6]])
         np.testing.assert_array_equal(result, expected)
@@ -244,12 +246,12 @@ class TestFunctionApplier:
         ]
 
         with pytest.raises(ValueError, match="Array 1 has 3 rows, expected 2"):
-            FunctionApplier._safe_concatenate(arrays)
+            TabularFunctionApplier._safe_concatenate(arrays)
 
     def test_safe_concatenate_empty_list(self):
         """Test error when array list is empty."""
         with pytest.raises(ValueError, match="Cannot concatenate empty array list"):
-            FunctionApplier._safe_concatenate([])
+            TabularFunctionApplier._safe_concatenate([])
 
     def test_safe_concatenate_1d_arrays(self):
         """Test concatenation of 1D arrays."""
@@ -258,7 +260,7 @@ class TestFunctionApplier:
             np.array([4, 5, 6]),
         ]
 
-        result = FunctionApplier._safe_concatenate(arrays)
+        result = TabularFunctionApplier._safe_concatenate(arrays)
 
         expected = np.array([[1, 4], [2, 5], [3, 6]])
         np.testing.assert_array_equal(result, expected)
@@ -274,7 +276,7 @@ class TestFunctionApplier:
         mod_func = WhiteNoiseAdder.from_json(modification_function_dict["parameters"])
 
         # Should not raise
-        FunctionApplier._validate_function_sequence(
+        TabularFunctionApplier._validate_function_sequence(
             [gen_func, mod_func], from_scratch=True
         )
 
@@ -285,7 +287,9 @@ class TestFunctionApplier:
         mod_func = WhiteNoiseAdder.from_json(modification_function_dict["parameters"])
 
         with pytest.raises(ValueError, match="First function must be generative"):
-            FunctionApplier._validate_function_sequence([mod_func], from_scratch=True)
+            TabularFunctionApplier._validate_function_sequence(
+                [mod_func], from_scratch=True
+            )
 
     def test_validate_function_sequence_from_scratch_multiple_generative(
         self, generative_function_dict
@@ -298,23 +302,23 @@ class TestFunctionApplier:
         with pytest.raises(
             ValueError, match="Only the first function can be generative"
         ):
-            FunctionApplier._validate_function_sequence(
+            TabularFunctionApplier._validate_function_sequence(
                 [gen_func, gen_func], from_scratch=True
             )
 
     def test_validate_function_sequence_empty_list(self):
         """Test validation error for empty function list."""
         with pytest.raises(ValueError, match="Function list cannot be empty"):
-            FunctionApplier._validate_function_sequence([], from_scratch=True)
+            TabularFunctionApplier._validate_function_sequence([], from_scratch=True)
 
     def test_infer_datatype(self):
         """Test datatype inference."""
-        result = FunctionApplier._infer_datatype(None)
+        result = TabularFunctionApplier._infer_datatype(None)
         assert result == "float32"
 
     def test_infer_column_type(self):
         """Test column type inference."""
-        result = FunctionApplier._infer_column_type([])
+        result = TabularFunctionApplier._infer_column_type([])
         assert result == "continuous"
 
     def test_modify_existing_dataset_wrong_type(self):
@@ -350,19 +354,19 @@ class TestFunctionApplier:
                 pass
 
         mock_dataset = MockDataset()
-        applier = FunctionApplier([], 100, False)
+        applier = TabularFunctionApplier([], 100, False)
 
         with pytest.raises(
             TypeError, match="Only Table datasets are currently supported"
         ):
             applier._modify_existing_dataset(mock_dataset)
 
-    @patch("sdg_core_lib.post_process.FunctionApplier.logger")
+    @patch("sdg_core_lib.post_process.TabularFunctionApplier.logger")
     def test_function_application_failure_logging(
         self, mock_logger, generative_function_dict
     ):
         """Test logging when function application fails."""
-        applier = FunctionApplier(
+        applier = TabularFunctionApplier(
             function_feature_dict=[generative_function_dict],
             n_rows=10,
             from_scratch=True,
@@ -398,13 +402,15 @@ class TestFunctionApplier:
             ],
         }
 
-        applier = FunctionApplier(
+        applier = TabularFunctionApplier(
             function_feature_dict=[gen_dict],
             n_rows=5,
             from_scratch=False,
         )
 
-        with patch("sdg_core_lib.post_process.FunctionApplier.logger") as mock_logger:
+        with patch(
+            "sdg_core_lib.post_process.TabularFunctionApplier.logger"
+        ) as mock_logger:
             _ = applier.apply_all(dataset=sample_dataset)
 
             # Check that generative function skip was logged
@@ -419,7 +425,7 @@ class TestFunctionApplier:
             np.array([[7.0], [8.0], [9.0]]),
         ]
 
-        cleaned_arrays, removed_rows = FunctionApplier._remove_nan_rows(arrays)
+        cleaned_arrays, removed_rows = TabularFunctionApplier._remove_nan_rows(arrays)
 
         assert removed_rows == 0
         assert len(cleaned_arrays) == 2
@@ -433,7 +439,7 @@ class TestFunctionApplier:
             np.array([[7.0], [8.0], [np.nan]]),
         ]
 
-        cleaned_arrays, removed_rows = FunctionApplier._remove_nan_rows(arrays)
+        cleaned_arrays, removed_rows = TabularFunctionApplier._remove_nan_rows(arrays)
 
         assert (
             removed_rows == 2
@@ -454,7 +460,7 @@ class TestFunctionApplier:
             np.array([[7.0], [8.0]]),
         ]
 
-        cleaned_arrays, removed_rows = FunctionApplier._remove_nan_rows(arrays)
+        cleaned_arrays, removed_rows = TabularFunctionApplier._remove_nan_rows(arrays)
 
         assert removed_rows == 2
         assert len(cleaned_arrays) == 2
@@ -468,7 +474,7 @@ class TestFunctionApplier:
             np.array([5.0, 6.0, np.nan, 8.0]),
         ]
 
-        cleaned_arrays, removed_rows = FunctionApplier._remove_nan_rows(arrays)
+        cleaned_arrays, removed_rows = TabularFunctionApplier._remove_nan_rows(arrays)
 
         assert (
             removed_rows == 2
@@ -484,7 +490,7 @@ class TestFunctionApplier:
 
     def test_remove_nan_rows_empty_list(self):
         """Test _remove_nan_rows with empty list."""
-        cleaned_arrays, removed_rows = FunctionApplier._remove_nan_rows([])
+        cleaned_arrays, removed_rows = TabularFunctionApplier._remove_nan_rows([])
 
         assert cleaned_arrays == []
         assert removed_rows == 0
@@ -496,14 +502,14 @@ class TestFunctionApplier:
             np.array([[4.0], [5.0], [6.0]]),  # 2D
         ]
 
-        cleaned_arrays, removed_rows = FunctionApplier._remove_nan_rows(arrays)
+        cleaned_arrays, removed_rows = TabularFunctionApplier._remove_nan_rows(arrays)
 
         assert removed_rows == 1
         assert len(cleaned_arrays) == 2
         assert cleaned_arrays[0].shape == (2, 1)  # Converted to 2D
         assert cleaned_arrays[1].shape == (2, 1)
 
-    @patch("sdg_core_lib.post_process.FunctionApplier.logger")
+    @patch("sdg_core_lib.post_process.TabularFunctionApplier.logger")
     def test_generate_from_scratch_with_nan_removal(
         self, mock_logger, generative_function_dict
     ):
@@ -511,7 +517,7 @@ class TestFunctionApplier:
         # Mock the function to return data with NaN values
         mock_data_with_nan = np.array([[1.0], [np.nan], [3.0], [4.0], [5.0]])
 
-        applier = FunctionApplier(
+        applier = TabularFunctionApplier(
             function_feature_dict=[generative_function_dict],
             n_rows=5,
             from_scratch=True,
@@ -556,7 +562,7 @@ class TestFunctionApplier:
         mod_dict["feature"] = "feature1"
         mod_dict["parameters"][1]["value"] = "0.0"  # No actual modification
 
-        applier = FunctionApplier(
+        applier = TabularFunctionApplier(
             function_feature_dict=[mod_dict],
             n_rows=5,
             from_scratch=False,

@@ -10,5 +10,5 @@ class BaseEvaluator(ABC):
         self.report = MetricReport()
 
     @abstractmethod
-    def compute(self):
+    def compute(self) -> dict:
         raise NotImplementedError
