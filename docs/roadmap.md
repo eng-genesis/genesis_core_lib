@@ -14,7 +14,7 @@ This roadmap outlines the development plans and future direction for GENESIS Cor
 - **Quality Evaluation**: Basic statistical similarity and quality metrics
 - **Privacy Features**: Basic privacy preservation mechanisms
 - **Core API**: Job-based interface for training, inference, and evaluation
-- **Preprocessing**: TableProcessor with VAE-specific strategies
+- **Preprocessing**: TableProcessor with specific strategies
 - **Model Management**: Model saving, loading, and versioning capabilities
 
 ### 🚧 In Development
@@ -33,22 +33,19 @@ Improve existing model quality, add flexibility, and enhance evaluation capabili
 ### 🆕 New Features
 
 #### Better Quality Improvements on Existing Models
-- **Advanced Training Techniques**: Implement progressive training, curriculum learning, and adversarial training
 - **Model Architecture Improvements**: Enhanced neural network architectures for better data synthesis
-- **Loss Function Optimization**: Multi-objective loss functions balancing quality, diversity, and privacy
-- **Regularization Techniques**: Advanced regularization methods to prevent overfitting and improve generalization
+- **Adaptive Regularization Techniques**: Advanced regularization methods to prevent overfitting and improve generalization
 
 #### More Flexibility in Model Generation
 - **Custom Model Architecture**: Support for user-defined neural network architectures
-- **Hybrid Models**: Combine GANs and VAEs for improved generation quality
-- **Conditional Generation**: Generate data based on specific conditions or constraints
-- **Multi-Modal Generation**: Support for generating data with mixed data types in a single model
+- **Development Speedup**: Better support for developers in defining custom base models
 
 #### Better Statistics in Evaluation
 - **Advanced Statistical Tests**: Kolmogorov-Smirnov, Anderson-Darling, and chi-square tests
-- **Distribution Similarity**: Jensen-Shannon divergence, Wasserstein distance, and KL divergence
-- **Correlation Preservation**: Pearson, Spearman, and mutual information preservation metrics
-- **Temporal Consistency**: For time series: autocorrelation, seasonality, and trend preservation metrics
+- **Additional Distribution Metrics**: Jensen-Shannon divergence, KL divergence, and Hellinger distance
+- **Enhanced Correlation Analysis**: Extended correlation preservation metrics including partial correlations
+- **Temporal Analysis**: Autocorrelation, seasonality detection, and trend preservation for time series
+- **Multivariate Dependencies**: Higher-order dependency analysis and conditional independence testing
 
 #### Visualization Comparison Features
 - **Distribution Plots**: Side-by-side comparison of original vs synthetic data distributions
@@ -56,6 +53,7 @@ Improve existing model quality, add flexibility, and enhance evaluation capabili
 - **Time Series Plots**: Interactive time series comparison with trend analysis
 - **Feature Importance**: SHAP and permutation importance comparisons
 - **Quality Dashboard**: Comprehensive visual quality assessment dashboard
+
 
 #### Configurable and Auto Hyperparameter Tuning
 - **Bayesian Optimization**: Automated hyperparameter search using Bayesian methods
@@ -79,15 +77,10 @@ Expand to new data types and add enterprise-grade capabilities.
 - **GAN-Based Image Synthesis**: DCGAN, StyleGAN, and Progressive GAN architectures
 - **VAE Image Generation**: Variational autoencoders for image synthesis
 - **Conditional Image Generation**: Generate images based on text or other conditions
-- **Image-to-Image Translation**: Style transfer and domain adaptation
-- **High-Resolution Generation**: Support for high-fidelity image generation
 
 #### Text Generation
-- **Language Model Integration**: GPT, BERT, and T5-based text generation
-- **Domain-Specific Text**: Medical, legal, financial, and technical text synthesis
-- **Structured Text Generation**: Forms, reports, and structured document generation
-- **Multilingual Support**: Text generation in multiple languages
-- **Style Control**: Generate text with specific styles, tones, and formats
+- **Language Model Integration**: LLM-based generation for simple texts
+- **Document Generation**: Generate documents based on text or other conditions
 
 #### Automatic Scaling on Nodes
 - **Distributed Training**: Multi-GPU and multi-node training support
@@ -136,7 +129,7 @@ Add intelligent features and advanced analytics capabilities.
 
 ---
 
-## Version 1.0.0: Production-Ready Platform
+## Version 1.0.0: Production-Ready 
 
 ### 🎯 Focus Areas
 Complete platform with production stability, comprehensive documentation, and ecosystem integration.
