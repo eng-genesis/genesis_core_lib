@@ -422,18 +422,44 @@ job = Job(
 
 #### 3. Model Training Fails
 ```python
-# Ensure your data format is correct
-def validate_data_format(data):
+# Validate Dataset format (column-based structure)
+def validate_dataset_format(dataset_config):
+    # Check dataset structure
+    if not isinstance(dataset_config, dict):
+        raise ValueError("Dataset config must be a dictionary")
+    
+    # Check required fields
+    if "data" not in dataset_config:
+        raise ValueError("Dataset config must contain 'data' field")
+    
+    data = dataset_config["data"]
     if not isinstance(data, list):
-        raise ValueError("Data must be a list of dictionaries")
+        raise ValueError("Data must be a list of column dictionaries")
+    
     if len(data) == 0:
-        raise ValueError("Data cannot be empty")
-    if not all(isinstance(row, dict) for row in data):
-        raise ValueError("Each row must be a dictionary")
+        raise ValueError("Data cannot be empty - at least one column required")
+    
+    # Validate each column
+    required_fields = ["column_name", "column_type", "column_datatype"]
+    for i, column in enumerate(data):
+        if not isinstance(column, dict):
+            raise ValueError(f"Column {i} must be a dictionary")
+        
+        for field in required_fields:
+            if field not in column:
+                raise ValueError(f"Column {i} missing required field: {field}")
+        
+        # Validate column data
+        if "column_data" not in column:
+            raise ValueError(f"Column '{column['column_name']}' missing 'column_data'")
+        
+        if not isinstance(column["column_data"], list):
+            raise ValueError(f"Column '{column['column_name']}' data must be a list")
+    
     return True
 
 # Validate before creating job
-validate_data_format(dataset_config["data"])
+validate_dataset_format(dataset_config)
 ```
 
 #### 4. Poor Quality Results
