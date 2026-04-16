@@ -212,13 +212,13 @@ time_series_config = {
     "dataset_type": "time_series",
     "data": [
         {
-            "column_data": [1.0, 1.1, 1.2, 1.3, 1.4, 2.0, 2.1, 2.2, 2.3, 2.4, 3.0, 3.1, 3.2, 3.3, 3.4],
+            "column_data": [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 4.0, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9],
             "column_name": "value",
             "column_type": "continuous",
             "column_datatype": "float64"
         },
         {
-            "column_data": [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2],
+            "column_data": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             "column_name": "group_index",
             "column_type": "group_index",
             "column_datatype": "int64"
@@ -228,9 +228,8 @@ time_series_config = {
 }
 
 # In this example:
-# - Group 0 (index 0): values [1.0, 1.1, 1.2, 1.3, 1.4] - 5 time steps
-# - Group 1 (index 1): values [2.0, 2.1, 2.2, 2.3, 2.4] - 5 time steps  
-# - Group 2 (index 2): values [3.0, 3.1, 3.2, 3.3, 3.4] - 5 time steps
+# - Group 0 (index 0): values [1.0, 1.1, 1.2, 1.3, 1.4] - 20 time steps
+# - Group 1 (index 1): values [2.0, 2.1, 2.2, 2.3, 2.4] - 20 time steps  
 # Each group has the same size (5 time steps) which is required for TimeSeries datasets
 
 # Use TimeSeriesVAE for time series data
