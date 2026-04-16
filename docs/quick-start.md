@@ -8,7 +8,7 @@ This guide will get you up and running with GENESIS Core Lib in minutes. You'll 
 
 ### Prerequisites
 - Python 3.12 or higher
-- pip or uv package manager
+- pip or uv (https://pypi.org/project/uv/) package manager.
 
 ### Option 1: Standard Installation (Recommended)
 ```bash
@@ -20,12 +20,6 @@ pip install sdg-core-lib
 uv add sdg-core-lib
 ```
 
-### Option 3: Development Installation
-```bash
-git clone https://github.com/emiliocimino/generator_core_lib.git
-cd generator_core_lib
-pip install -e ".[dev]"
-```
 
 ### Verify Installation
 ```python
@@ -41,7 +35,7 @@ print("GENESIS Core Lib installed successfully!")
 from sdg_core_lib import Job
 import json
 
-# Load configuration from JSON file (similar to test files)
+# Load configuration from JSON file 
 with open('your_config.json', 'r') as f:
     config = json.load(f)
 
@@ -128,15 +122,33 @@ print(f"Total rows generated: {len(synthetic_data)}")
 ### Expected Output
 ```
 Generated data:
-Row 1: {'linear_data': [1.0, 3.02, 5.04, ...], 'quadratic_data': [...], 'sinusoidal_data': [...]}
-Row 2: {'linear_data': [...], 'quadratic_data': [...], 'sinusoidal_data': [...]}
-Row 3: {'linear_data': [...], 'quadratic_data': [...], 'sinusoidal_data': [...]}
-Row 4: {'linear_data': [...], 'quadratic_data': [...], 'sinusoidal_data': [...]}
-Row 5: {'linear_data': [...], 'quadratic_data': [...], 'sinusoidal_data': [...]}
+[
+  {
+    "column_data": [3.0, 5.0, 7.0, 9.0, 11.0, ...],
+    "column_name": "linear_data",
+    "column_type": "continuous",
+    "column_datatype": "float64"
+  },
+  {
+    "column_data": [0.0, -3.0, -4.0, -3.0, 0.0, ...],
+    "column_name": "quadratic_data",
+    "column_type": "continuous",
+    "column_datatype": "float64"
+  },
+  {
+    "column_data": [0.0, 0.0998, 0.1987, 0.2955, 0.3894, ...],
+    "column_name": "sinusoidal_data",
+    "column_type": "continuous",
+    "column_datatype": "float64"
+  }
+]
 Total rows generated: 50
 ```
 
-## Working with Real Data
+## Working with Tabular Data
+
+
+Tabular data is structured as a list of column dictionaries, where each dictionary represents a column in the table. Each dictionary contains the column data, name, type, and datatype. For example:
 
 ### Load and Process Data
 
@@ -189,6 +201,8 @@ print(f"Quality metrics: {metrics}")
 
 ### Generate Sequential Data
 
+To generate sequential data, you need to provide a time series structure. The TimeSeries dataset requires a column of type `group_index` to identify isolated experiments. The group index divides the data into groups, where each group represents an independent time series experiment. All groups must have the same size for proper time series processing.
+
 ```python
 from sdg_core_lib import Job
 import json
@@ -198,13 +212,26 @@ time_series_config = {
     "dataset_type": "time_series",
     "data": [
         {
-            "column_data": [1.0, 1.1, 1.2, 1.3, 1.4],
+            "column_data": [1.0, 1.1, 1.2, 1.3, 1.4, 2.0, 2.1, 2.2, 2.3, 2.4, 3.0, 3.1, 3.2, 3.3, 3.4],
             "column_name": "value",
             "column_type": "continuous",
             "column_datatype": "float64"
+        },
+        {
+            "column_data": [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2],
+            "column_name": "group_index",
+            "column_type": "group_index",
+            "column_datatype": "int64"
         }
+        
     ]
 }
+
+# In this example:
+# - Group 0 (index 0): values [1.0, 1.1, 1.2, 1.3, 1.4] - 5 time steps
+# - Group 1 (index 1): values [2.0, 2.1, 2.2, 2.3, 2.4] - 5 time steps  
+# - Group 2 (index 2): values [3.0, 3.1, 3.2, 3.3, 3.4] - 5 time steps
+# Each group has the same size (5 time steps) which is required for TimeSeries datasets
 
 # Use TimeSeriesVAE for time series data
 time_series_model_config = {
@@ -263,6 +290,35 @@ job = Job(
         "training_data_info": schema  # Schema from previous training
     }
 )
+
+# Example data skeleton using Dataset validation
+# Skeleton defines the structure without actual data values
+data_skeleton = [
+    {
+        "column_name": "feature_1",
+        "column_datatype": "float64",
+        "column_type": "continuous",
+        "column_position": 0,
+        "column_size": 1
+    },
+    {
+        "column_name": "category_feature", 
+        "column_datatype": "int64",
+        "column_type": "categorical",
+        "column_position": 1,
+        "column_size": 1
+    }
+]
+
+# Skeleton explanation:
+# - column_name: Name of the feature/column
+# - column_datatype: Data type (float64, int64, etc.)
+# - column_type: Feature type (continuous, categorical, primary_key, group_index)
+# - column_position: Position/order of the column (0-based)
+# - column_size: Size of the column (usually 1 for single values)
+# 
+# Skeleton is used to define the dataset structure before data generation
+# The actual data will be filled during the generation process
 
 # Generate data without retraining
 results, metrics = job.infer()
@@ -358,7 +414,7 @@ pip install sdg-core-lib --no-cache-dir
 ```python
 # For large datasets, reduce batch size or use smaller n_rows
 job = Job(
-    n_rows=1000,  # Reduce if memory is limited
+    n_rows=1000000,  # Reduce if memory is limited
     model_info=model_config,
     dataset=dataset_config
 )
