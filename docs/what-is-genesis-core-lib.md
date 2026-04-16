@@ -110,25 +110,24 @@ Extensible framework for data manipulation:
 ### Supported Data Types
 - **Tabular Data**: CSV-like structured data
 - **Time Series**: Sequential data with timestamps
-- **Custom Formats**: Extensible for specialized needs
 
 ### Machine Learning Models
 - **GANs**: Generative Adversarial Networks
 - **VAEs**: Variational Autoencoders
-- **Custom Models**: User-defined architectures
 
 ### Mathematical Functions
 - **Linear Functions**: y = mx + q
 - **Quadratic Functions**: Polynomial relationships
 - **Sinusoidal Functions**: Periodic patterns
 - **Distribution Functions**: Statistical distributions
-- **Custom Functions**: User-defined mathematical operations
 
 ### Quality Metrics
-- **Statistical Similarity**: Distribution comparison tests
-- **Correlation Preservation**: Maintain feature relationships
-- **Privacy Metrics**: Differential privacy measures
-- **Utility Assessment**: Downstream task performance
+- **Statistical Similarity**: Wasserstein distance for continuous features
+- **Association Preservation**: Cramer's V for categorical feature relationships
+- **Frequency Analysis**: Categorical frequency difference measurement
+- **Novelty Assessment**: Synthetic data uniqueness and novelty scores
+- **Adherence Metrics**: Category and boundary adherence validation
+- **Temporal Similarity**: Dynamic Time Warping for time series
 
 ## Integration Capabilities
 
@@ -157,42 +156,14 @@ Extensible framework for data manipulation:
 - **Lazy Evaluation**: Compute only when needed
 - **Resource Monitoring**: Track memory and CPU usage
 
-## Security & Privacy
-
-### Privacy Preservation
-- **Differential Privacy**: Mathematical privacy guarantees
-- **Data Anonymization**: Remove identifying information
-- **Statistical Privacy**: Maintain aggregate properties only
-
-### Security Measures
-- **Input Validation**: Prevent injection attacks
-- **Secure Model Storage**: Protect trained models
-- **Access Control**: Manage data access permissions
-
-## Community & Ecosystem
-
-### Open Source Development
-- **MIT License**: Permissive open source license
-- **Community Contributions**: Welcome external contributions
-- **Transparent Development**: Open development process
-
-### Documentation & Support
-- **Comprehensive Docs**: Detailed user and developer guides
-- **Examples & Tutorials**: Practical use cases
-- **Community Support**: Forums and discussion channels
 
 ## Future Directions
 
 ### Advanced Features
 - **Multi-modal Data**: Text, image, and audio generation
-- **Federated Learning**: Privacy-preserving distributed training
+- **Scalable Learning**: Privacy-preserving distributed training
 - **Real-time Generation**: Streaming data synthesis
 - **Explainable AI**: Interpret synthetic data generation
 
-### Industry Applications
-- **Healthcare**: Medical data synthesis
-- **Finance**: Financial data generation
-- **Retail**: Customer behavior simulation
-- **Manufacturing**: Sensor data synthesis
 
 GENESIS Core Lib represents a comprehensive solution for synthetic data generation, combining advanced machine learning techniques with practical usability and extensibility for diverse applications.
