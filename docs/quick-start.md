@@ -35,8 +35,8 @@ print("GENESIS Core Lib installed successfully!")
 from sdg_core_lib import Job
 import json
 
-# Load configuration from JSON file 
-with open('your_config.json', 'r') as f:
+# Load configuration from JSON file (You will find it in docs folder)
+with open('table_example.json', 'r') as f:
     config = json.load(f)
 
 # Create and run the job
