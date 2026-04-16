@@ -440,8 +440,8 @@ validate_data_format(dataset_config["data"])
 ```python
 # Try different models or adjust hyperparameters
 models_to_try = [
-    "sdg_core_lib.data_generator.models.GANs.TabularGAN",
-    "sdg_core_lib.data_generator.models.VAEs.TabularVAE"
+    "sdg_core_lib.data_generator.models.GANs.implementation.CTGAN.CTGAN",
+    "sdg_core_lib.data_generator.models.VAEs.implementation.TabularVAE.TabularVAE"
 ]
 
 for model_name in models_to_try:
