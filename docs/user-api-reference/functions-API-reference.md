@@ -399,9 +399,10 @@ noisy_base_data, _, _ = noise_adder.apply(n_rows=365, data=base_data)
 
 # Step 3: Generate seasonal pattern with SinusoidalFunction
 seasonal_params = [
-    Parameter("amplitude", "20.0", "float"),
-    Parameter("frequency", "0.1", "float"),
-    Parameter("phase", "0.0", "float"),
+    Parameter("a", "20.0", "float"),
+    Parameter("f", "0.1", "float"),
+    Parameter("phi", "0.0", "float"),
+    Parameter("v", "0.0", "float"),
     Parameter("min_value", "0.0", "float"),
     Parameter("max_value", "365.0", "float")
 ]
@@ -430,9 +431,7 @@ import numpy as np
 # Create a base normal distribution
 normal_params = [
     Parameter("mean", "50.0", "float"),
-    Parameter("std", "10.0", "float"),
-    Parameter("min_value", "0.0", "float"),
-    Parameter("max_value", "100.0", "float")
+    Parameter("standard_deviation", "10.0", "float")
 ]
 normal_func = NormalDistributionSample(normal_params)
 
