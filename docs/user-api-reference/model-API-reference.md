@@ -430,77 +430,156 @@ model_config = {
 
 ### CTGAN
 
-Conditional Tabular GAN for complex tabular data.
+Conditional Tabular GAN for complex tabular data with mixed data types.
 
-#### Configuration
+#### Creating a CTGAN Instance
+
+CTGAN requires a specific data schema metadata to understand your data structure. Here's how to create and configure a CTGAN instance:
 
 ```python
-model_config = {
-    "algorithm_name": "sdg_core_lib.data_generator.models.GANs.implementation.CTGAN.CTGAN",
-    "model_name": "ctgan_model",
-    "hyperparameters": {
-        "embedding_dim": 128,
-        "generator_dim": [256, 256],
-        "discriminator_dim": [256, 256],
-        "learning_rate": 0.0002,
-        "batch_size": 500,
-        "epochs": 300
+from sdg_core_lib.data_generator.models.GANs.implementation.CTGAN import CTGAN
+import numpy as np
+
+# Step 1: Define your data schema metadata using DataSkeleton model
+# This tells CTGAN about each column in your dataset
+metadata = [
+    {
+        "column_name": "age",
+        "column_type": "continuous",
+        "column_datatype": "float32",
+        "column_position": 0,
+        "column_size": 2  # 1 for normalized value + 1 for mode indicator
+    },
+    {
+        "column_name": "income",
+        "column_type": "continuous",
+        "column_datatype": "float32", 
+        "column_position": 1,
+        "column_size": 3  # 1 for normalized value + 2 for mode indicators
+    },
+    {
+        "column_name": "education",
+        "column_type": "categorical",
+        "column_datatype": "string",
+        "column_position": 2,
+        "column_size": 4  # Number of categories (high school, bachelor, master, phd)
+    },
+    {
+        "column_name": "city",
+        "column_type": "categorical",
+        "column_datatype": "string",
+        "column_position": 3,
+        "column_size": 5  # Number of cities
     }
-}
+]
+
+# Step 2: Create CTGAN instance with hyperparameters
+ctgan = CTGAN(
+    metadata=metadata,
+    model_name="my_ctgan_model",
+    # Network architecture parameters
+    gen_hidden=256,          # Generator hidden layer size
+    critic_hidden=256,       # Critic (discriminator) hidden layer size
+    critic_dropout=0.2,      # Dropout rate for critic to prevent overfitting
+    
+    # Training parameters
+    learning_rate=0.001,     # Learning rate for both generator and critic
+    batch_size=100,          # Batch size for training
+    epochs=50,               # Number of training epochs
+    gen_steps=4,             # Generator training steps per critic step
+    
+    # CTGAN-specific parameters
+    pac_size=10              # Size of pac groups for critic training
+)
 ```
 
-**Hyperparameters:**
-- `embedding_dim` (int): Embedding dimension
-- `generator_dim` (list[int]): Generator network dimensions
-- `discriminator_dim` (list[int]): Discriminator network dimensions
-- `learning_rate` (float): Learning rate for training
-- `batch_size` (int): Batch size for training
-- `epochs` (int): Number of training epochs
+#### Initialization Parameters Explained
 
-**Features:**
-- Handles mixed data types
-- Preserves feature correlations
-- Good for medium-sized datasets (1K-100K rows)
-- Captures complex distributions
+**Required Parameters:**
+- `metadata` (list[dict]): Data schema defining each column's type and size
+- `model_name` (str): Unique identifier for your model instance
 
-**Best For:**
-- Medium to large datasets (> 1K rows)
-- Complex data distributions
-- When high realism is required
-- Tabular data with complex feature interactions
+**Network Architecture:**
+- `gen_hidden` (int, default=256): Hidden layer size for the generator network
+- `critic_hidden` (int, default=256): Hidden layer size for the critic (discriminator)
+- `critic_dropout` (float, default=0.2): Dropout rate applied to critic layers
 
-### Model Selection Guide
+**Training Configuration:**
+- `learning_rate` (float, default=0.001): Learning rate for Adam optimizers (β₁=0.5, β₂=0.9)
+- `batch_size` (int, default=100): Number of samples per training batch
+- `epochs` (int, default=50): Total number of training epochs
+- `gen_steps` (int, default=4): Generator updates per single critic update
 
-| Dataset Size | Data Complexity | Recommended Model | Reason |
-|-------------|-----------------|-------------------|---------|
-| < 1,000 rows | Low | TabularVAE | More stable with small data |
-| 1,000-10,000 rows | Medium | TabularVAE or CTGAN | Both work well |
-| > 10,000 rows | High | CTGAN | Can capture complex distributions |
-| Any size | Time series | TimeSeriesVAE | Specialized for temporal data |
-| Any size | Very high dimensional | TabularVAE | More stable training |
+**CTGAN-Specific:**
+- `pac_size` (int, default=10): Size of pac (Pac) groups for critic training - groups samples together for more stable discrimination
 
-### Usage Example
+#### Data Schema Requirements
+
+Your skeleton (metadata) must follow the DataSkeleton model structure:
 
 ```python
-from sdg_core_lib import Job
-
-# Configure model
-model_config = {
-    "algorithm_name": "sdg_core_lib.data_generator.models.VAEs.implementation.TabularVAE.TabularVAE",
-    "model_name": "my_vae_model"
+# For continuous columns:
+{
+    "column_name": "column_name",
+    "column_type": "continuous",
+    "column_datatype": "float32",  # or "int32"
+    "column_position": 0,          # Zero-based position in dataset
+    "column_size": N                # N-1 modes + 1 normalized value
 }
 
-# Create job with model
-job = Job(
-    n_rows=1000,
-    model_info=model_config,
-    dataset=dataset_config,
-    save_filepath="./models"
-)
-
-# Train and generate
-synthetic_data, metrics, model, schema = job.train()
+# For categorical columns:
+{
+    "column_name": "column_name", 
+    "column_type": "categorical",
+    "column_datatype": "string",    # or "int32" for encoded categories
+    "column_position": 1,           # Zero-based position in dataset
+    "column_size": N                # Number of categories
+}
 ```
+
+**Important Notes:**
+- At least one categorical column is required for CTGAN to work
+- Continuous columns need `column_size >= 2` (normalized value + mode indicators)
+- Categorical columns use one-hot encoding internally
+- `column_position` must be zero-based and unique for each column
+- `column_datatype` should match your actual data type ("float32", "int32", or "string")
+
+#### Training and Usage
+
+```python
+# Prepare your data (numpy array, preprocessed according to schema)
+train_data = np.random.rand(1000, total_feature_size)  # Your actual data. This will not work!
+
+# Train the model
+ctgan.train(train_data)
+
+# Generate synthetic data
+synthetic_data = ctgan.infer(n_rows=500)
+
+# Save model
+ctgan.save("/path/to/save/model")
+
+# Load model later
+loaded_ctgan = CTGAN(
+    metadata=metadata,
+    model_name="my_ctgan_model", 
+    load_path="/path/to/save/model"
+)
+```
+
+#### Advanced Configuration
+
+You can modify hyperparameters after initialization:
+
+```python
+# Update training parameters
+ctgan.set_hyperparameters(
+    learning_rate=0.0005,
+    batch_size=200,
+    epochs=100
+)
+```
+
 
 ### Environment Variables
 
