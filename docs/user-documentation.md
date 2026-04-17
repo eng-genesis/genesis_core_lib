@@ -11,9 +11,6 @@ This comprehensive user documentation covers all aspects of using GENESIS Core L
 3. [Model Types](#model-types)
 4. [Configuration](#configuration)
 5. [API Reference](#api-reference)
-6. [Examples and Use Cases](#examples-and-use-cases)
-7. [Best Practices](#best-practices)
-8. [Troubleshooting](#troubleshooting)
 
 ## Core Concepts
 

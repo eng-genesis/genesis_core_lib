@@ -84,6 +84,142 @@ Create dataset from schema skeleton.
 **Returns:**
 - `Dataset`: Dataset instance
 
+#### preprocess()
+```python
+preprocess(processor: Processor) -> Dataset
+```
+Apply preprocessing transformations using a processor. 
+
+**Parameters:**
+- `processor` (Processor): Processor instance containing preprocessing steps and strategy
+
+*See [Processor API Reference](./processor-API-reference.md) for detailed processor documentation.*
+
+**Returns:**
+- `Dataset`: Preprocessed dataset with transformed columns
+
+**Functioning:**
+- Applies all preprocessing steps defined in the processor to each column
+- Saves preprocessing artifacts (scalers, encoders, etc.) to disk
+- Returns new dataset instance with preprocessed columns
+- For Table: Returns new Table with same primary key indexes
+- For TimeSeries: Returns new TimeSeries with same group index
+
+#### postprocess()
+```python
+postprocess(processor: Processor) -> Dataset
+```
+Apply postprocessing transformations to reverse preprocessing.
+
+**Parameters:**
+- `processor` (Processor): Processor instance containing preprocessing steps
+
+**Returns:**
+- `Dataset`: Postprocessed dataset with original data types restored
+
+**Functioning:**
+- Loads saved preprocessing artifacts from disk
+- Applies inverse transformations in reverse order to each column
+- Restores original data types (e.g., converts float back to int/str)
+- Returns new dataset instance with postprocessed columns
+- For Table: Returns new Table with same primary key indexes
+- For TimeSeries: Returns new TimeSeries with same group index
+
+#### to_json()
+```python
+to_json() -> list[dict]
+```
+Convert dataset to JSON format.
+
+**Returns:**
+- `list[dict]`: JSON representation
+
+#### to_skeleton()
+```python
+to_skeleton() -> list[dict]
+```
+Extract schema skeleton for models. [What is a data skeleton?](#what-is-a-data-skeleton)
+
+**Returns:**
+- `list[dict]`: Schema skeleton representation
+
+#### clone()
+```python
+clone(new_data: np.ndarray) -> Dataset
+```
+Create new dataset with different data.
+
+**Parameters:**
+- `new_data` (np.ndarray): New data array
+
+**Returns:**
+- `Dataset`: New dataset instance
+
+#### get_computing_data()
+```python
+get_computing_data() -> np.ndarray
+```
+Get data in computing format optimized for machine learning operations.
+
+**Returns:**
+- `np.ndarray`: Data array formatted for ML operations
+
+**Computing Format Explained:**
+The computing format is a preprocessed representation of data optimized for ML model training and inference:
+
+- **Tabular Data**: Returns a 2D array with shape `(n_rows, n_features)` where each column is converted to numeric format (categorical values become encoded, numeric values are scaled)
+- **Time Series Data**: Returns a 3D array with shape `(batch_size, n_features, time_steps)` where experiments are batched together
+- **Data Types**: All values are converted to `float32` or `float64` for numerical computation
+- **Missing Values**: Handled according to preprocessing strategy (imputed, masked, etc.)
+- **Feature Ordering**: Columns are ordered according to their position in the dataset schema
+
+**Use Cases:**
+- Training ML models (`model.train(dataset.get_computing_data())`)
+- Model inference (`model.infer(dataset.get_computing_shape())`)
+- Feature analysis and data exploration
+- Integration with external ML libraries
+
+#### get_computing_shape()
+```python
+get_computing_shape() -> tuple[int, ...]
+```
+Get the shape of data in computing format.
+
+**Returns:**
+- `tuple[int, ...]`: Shape tuple for the computing data array
+
+**Computing Shape Explained:**
+The computing shape describes the dimensions of the data when converted to computing format:
+
+- **Tabular Data**: `(n_rows, n_features)`
+  - `n_rows`: Number of data samples/records
+  - `n_features`: Number of features after preprocessing (including encoded categorical features)
+  
+- **Time Series Data**: `(batch_size, n_features, time_steps)`
+  - `batch_size`: Number of time series experiments
+  - `n_features`: Number of features measured at each time step
+  - `time_steps`: Length of each time series sequence
+
+**Examples:**
+```python
+# Tabular dataset with 1000 rows, 5 columns (2 numeric, 3 categorical)
+dataset = Table.from_json(tabular_data)
+shape = dataset.get_computing_shape()  # Returns: (1000, 7) 
+# 7 features = 2 numeric + 3 categorical (one-hot encoded) + 2 additional features
+
+# Time series dataset with 10 experiments, 4 features, 12 time steps
+timeseries = TimeSeries.from_json(ts_data)
+shape = timeseries.get_computing_shape()  # Returns: (10, 4, 12)
+```
+
+**Use Cases:**
+- Model input shape configuration (`model.input_shape = dataset.get_computing_shape()`)
+- Memory allocation planning
+- Data validation and debugging
+- Integration with neural network frameworks
+
+---
+
 ## What is a Data Skeleton?
 
 A **Data Skeleton** is a schema representation of a Pre-Processed dataset that contains structural metadata without actual data values. It describes the dataset's architecture, including column names, types, positions, and sizes, which is used for:
@@ -149,94 +285,6 @@ dataset = Dataset.from_skeleton(tabular_skeleton)
 
 **Note**: The skeleton structure is a **list of dictionaries**, not a nested dictionary with `"columns"` key. This is the actual structure returned by the `to_skeleton()` method and expected by `from_skeleton()`.
 
-#### preprocess()
-```python
-preprocess(processor: Processor) -> Dataset
-```
-Apply preprocessing transformations using a processor. 
-
-**Parameters:**
-- `processor` (Processor): Processor instance containing preprocessing steps and strategy
-
-*See [Processor API Reference](./processor-API-reference.md) for detailed processor documentation.*
-
-**Returns:**
-- `Dataset`: Preprocessed dataset with transformed columns
-
-**Functioning:**
-- Applies all preprocessing steps defined in the processor to each column
-- Saves preprocessing artifacts (scalers, encoders, etc.) to disk
-- Returns new dataset instance with preprocessed columns
-- For Table: Returns new Table with same primary key indexes
-- For TimeSeries: Returns new TimeSeries with same group index
-
-#### postprocess()
-```python
-postprocess(processor: Processor) -> Dataset
-```
-Apply postprocessing transformations to reverse preprocessing.
-
-**Parameters:**
-- `processor` (Processor): Processor instance containing preprocessing steps
-
-**Returns:**
-- `Dataset`: Postprocessed dataset with original data types restored
-
-**Functioning:**
-- Loads saved preprocessing artifacts from disk
-- Applies inverse transformations in reverse order to each column
-- Restores original data types (e.g., converts float back to int/str)
-- Returns new dataset instance with postprocessed columns
-- For Table: Returns new Table with same primary key indexes
-- For TimeSeries: Returns new TimeSeries with same group index
-
-#### to_json()
-```python
-to_json() -> list[dict]
-```
-Convert dataset to JSON format.
-
-**Returns:**
-- `list[dict]`: JSON representation
-
-#### to_skeleton()
-```python
-to_skeleton() -> list[dict]
-```
-Extract schema skeleton.
-
-**Returns:**
-- `list[dict]`: Schema skeleton representation
-
-#### clone()
-```python
-clone(new_data: np.ndarray) -> Dataset
-```
-Create new dataset with different data.
-
-**Parameters:**
-- `new_data` (np.ndarray): New data array
-
-**Returns:**
-- `Dataset`: New dataset instance
-
-#### get_computing_data()
-```python
-get_computing_data() -> np.ndarray
-```
-Get data in computing format.
-
-**Returns:**
-- `np.ndarray`: Data array for ML operations
-
-#### get_computing_shape()
-```python
-get_computing_shape() -> tuple[int, ...]
-```
-Get shape of computing data.
-
-**Returns:**
-- `tuple[int, ...]`: Data shape tuple
 
 ---
 

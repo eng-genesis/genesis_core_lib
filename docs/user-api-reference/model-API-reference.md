@@ -12,7 +12,134 @@ This document provides detailed API documentation for machine learning models us
 
 ## UnspecializedModel Base Class
 
-Abstract base class for all machine learning models.
+Abstract base class that provides the foundation for all machine learning models in GENESIS Core Lib. This class implements common functionalities and defines abstract methods that must be implemented by all subclasses, ensuring consistent behavior across different model architectures.
+
+### Class Design and Architecture
+
+The UnspecializedModel serves as a template for model implementations by:
+
+- **Providing Common Infrastructure**: Shared attributes and utility methods
+- **Defining Required Interface**: Abstract methods that all models must implement
+- **Managing Model Lifecycle**: Handles initialization, loading, and building processes
+- **Standardizing Metadata**: Ensures consistent data structure handling
+
+### Constructor Parameters
+
+```python
+def __init__(
+    self,
+    metadata: list[dict],
+    model_name: str,
+    input_shape: str = None,
+    load_path: str = None,
+):
+```
+
+**Parameters:**
+- `metadata` (list[dict]): Dataset metadata containing column information and schema. [What is a data skeleton?](./dataset-API-reference.md#what-is-a-data-skeleton)
+- `model_name` (str): Identifier for the model, used for logging and saving
+- `input_shape` (str): String representation of input dimensions (e.g., "(1000,10)")
+- `load_path` (str): Path to load pre-trained model from (optional)
+
+**Key Attributes:**
+- `_metadata`: Stores dataset schema and column information
+- `model_name`: Model identifier for file naming and logging
+- `input_shape`: Parsed tuple of input dimensions
+- `_load_path`: Path for loading pre-trained models
+- `_model`: Placeholder for the actual model instance
+- `training_info`: Placeholder for training configuration
+
+### How It Serves as a Model Basis
+
+#### 1. Metadata-Driven Architecture
+```python
+# Models receive dataset metadata (skeleton) at initialization
+metadata = [
+    {
+        "feature_name": "age",
+        "feature_position": 0,
+        "feature_type": "continuous",
+        "type": "float64",
+        "is_categorical": false,
+        "feature_size": "1"
+    },
+    {
+        "feature_name": "category",
+        "feature_position": 1,
+        "feature_type": "categorical",
+        "type": "str",
+        "is_categorical": true,
+        "feature_size": "1"
+    }
+]
+
+model = TabularVAE(
+    metadata=metadata,
+    model_name="my_vae",
+    input_shape="(1000,2)"  # 1000 rows, 2 features
+)
+```
+
+#### 2. Abstract Method Implementation
+Subclasses must implement these core methods:
+
+```python
+class CustomModel(UnspecializedModel):
+    def _build(self, input_shape: tuple[int, ...]):
+        """Build the model architecture with given input shape."""
+        # Implement neural network construction
+        pass
+    
+    def _load(self, model_filepath: str):
+        """Load pre-trained model weights."""
+        # Implement model loading logic
+        pass
+    
+    def train(self, data: np.ndarray):
+        """Train the model on provided data."""
+        # Implement training algorithm
+        pass
+    
+    def fine_tune(self, data: np.ndarray, **kwargs):
+        """Fine-tune the model."""
+        # Implement fine-tuning logic
+        pass
+    
+    def infer(self, n_rows: int, **kwargs):
+        """Generate synthetic data."""
+        # Implement inference logic
+        pass
+    
+    def save(self, folder_path):
+        """Save model artifacts."""
+        # Implement saving logic
+        pass
+    
+    def set_hyperparameters(self, **kwargs):
+        """Configure model hyperparameters."""
+        # Implement hyperparameter setting
+        pass
+```
+
+#### 3. Automatic Model Instantiation
+The base class handles model creation through the `_instantiate()` method:
+
+```python
+# Automatic instantiation workflow:
+# 1. If load_path provided -> Load pre-trained model
+# 2. If input_shape available -> Build new model
+# 3. Store model instance in self._model
+```
+
+#### 4. Input Shape Handling
+The base class provides utility for parsing string input shapes:
+
+```python
+# Converts string format to tuple
+input_shape = "(1000,10)"  # String input
+parsed_shape = (1000, 10)  # Parsed tuple
+```
+
 
 ### Methods
 
@@ -20,55 +147,204 @@ Abstract base class for all machine learning models.
 ```python
 train(data: np.ndarray) -> UnspecializedModel
 ```
-Train the model on provided dataset.
+Train the model on the provided dataset using the model's specific learning algorithm. This method automatically handles model instantiation if not already built.
 
 **Parameters:**
-- `data` (np.ndarray): Training data array
+- `data` (np.ndarray): Training data array in computing format (preprocessed numerical data)
 
 **Returns:**
-- `UnspecializedModel`: Trained model instance
+- `UnspecializedModel`: Self instance with trained weights and updated model state
+
+**Process:**
+1. Calls `_instantiate()` to ensure model is built or loaded
+2. Executes model-specific training algorithm
+3. Updates internal model state and training info
+4. Returns self for method chaining
+
+**Note:** The input data should be in computing format (numeric array) as obtained from `dataset.get_computing_data()`.
 
 #### infer()
 ```python
-infer(n_rows: int) -> np.ndarray
+infer(n_rows: int, **kwargs) -> np.ndarray
 ```
-Generate synthetic data.
+Generate synthetic data using the trained model. The model must be trained before calling this method.
 
 **Parameters:**
-- `n_rows` (int): Number of rows to generate
+- `n_rows` (int): Number of synthetic rows to generate
+- `**kwargs`: Additional model-specific parameters (e.g., random_seed, temperature)
 
 **Returns:**
-- `np.ndarray`: Generated synthetic data
+- `np.ndarray`: Generated synthetic data in computing format
+
+**Process:**
+1. Validates that model is trained and ready
+2. Generates latent representations or random inputs
+3. Performs forward pass through the model
+4. Returns synthetic data matching the training data format
+
+**Note:** Output data will be in computing format and may need postprocessing to convert back to original data types.
 
 #### save()
 ```python
-save(filepath: str) -> None
+save(folder_path: str) -> None
 ```
-Save model to disk.
+Persist the trained model and all associated artifacts to disk for later use.
 
 **Parameters:**
-- `filepath` (str): Path to save model
+- `folder_path` (str): Directory path where model artifacts will be saved
+
+**Saved Components:**
+- Model weights and architecture
+- Training configuration and hyperparameters
+- Metadata and schema information
+- Training history and performance metrics
+
+**Note:** Creates the specified directory if it doesn't exist. All files are saved within the provided folder path.
 
 #### load()
 ```python
 load(filepath: str) -> UnspecializedModel
 ```
-Load model from disk.
+Load a previously saved model from disk and restore it to a ready-to-use state.
 
 **Parameters:**
-- `filepath` (str): Path to saved model
+- `filepath` (str): Directory path containing the saved model artifacts
 
 **Returns:**
-- `UnspecializedModel`: Loaded model instance
+- `UnspecializedModel`: Self instance with loaded model ready for inference
+
+**Process:**
+1. Validates the existence and compatibility of saved files
+2. Reconstructs the model architecture
+3. Loads trained weights and parameters
+4. Restores training metadata and configuration
+5. Sets model to inference-ready state
+
+**Note:** This method is typically called automatically during initialization if `load_path` is provided.
 
 #### set_hyperparameters()
 ```python
-set_hyperparameters(**hyperparams) -> None
+set_hyperparameters(**kwargs) -> None
 ```
-Set model hyperparameters.
+Configure model-specific hyperparameters for training and inference.
 
 **Parameters:**
-- `**hyperparams`: Hyperparameter keyword arguments
+- `**kwargs`: Model-specific hyperparameter keyword arguments
+
+**Common Hyperparameters:**
+- `learning_rate`: Optimization step size
+- `batch_size`: Training batch size
+- `epochs`: Maximum training iterations
+- `latent_dim`: Latent space dimension (VAEs)
+- `hidden_dims`: Hidden layer dimensions
+
+**Note:** Hyperparameters take effect on the next training session. Some models may require re-initialization after changing certain parameters.
+
+---
+
+### Training Info
+
+The `training_info` attribute stores basic training information about the model's training process. This information is automatically populated during training and provides essential metrics for model evaluation.
+
+#### TrainingInfo Class Structure
+
+The TrainingInfo class stores fundamental training metrics:
+
+```python
+class TrainingInfo:
+    def __init__(
+        self,
+        loss_fn: str,              # Loss function used
+        train_samples: int,        # Number of training samples
+        train_loss: float,         # Final training loss
+        validation_samples: int = None,   # Number of validation samples
+        validation_loss: float = None,    # Final validation loss
+    )
+```
+
+#### Training Info Dictionary Format
+
+When converted to dictionary format (via `to_dict()` method), the structure is:
+
+```python
+training_info_dict = {
+    "loss_function": str,          # Name of loss function
+    "train_samples": int,          # Number of training samples
+    "train_loss": float,            # Final training loss
+    "val_samples": int,            # Number of validation samples (optional)
+    "val_loss": float,              # Final validation loss (optional)
+}
+```
+
+#### Accessing Training Information
+
+```python
+# After training
+model.train(training_data)
+
+# Access training info object
+info = model.training_info
+
+# Convert to dictionary for easier access
+info_dict = info.to_dict()
+
+# Check basic training metrics
+print(f"Loss function: {info_dict['loss_function']}")
+print(f"Training samples: {info_dict['train_samples']}")
+print(f"Training loss: {info_dict['train_loss']:.4f}")
+
+# Check validation metrics if available
+if info_dict['val_samples'] is not None:
+    print(f"Validation samples: {info_dict['val_samples']}")
+    print(f"Validation loss: {info_dict['val_loss']:.4f}")
+```
+
+#### Training Info Persistence
+
+Training information is automatically saved and loaded with the model:
+
+```python
+# Save model (includes training info)
+model.save("./my_model")
+
+# Load model (restores training info)
+loaded_model = TabularVAE(metadata, "loaded_model", load_path="./my_model")
+
+# Training info is available after loading
+info = loaded_model.training_info.to_dict()
+print(f"Training loss from loaded model: {info['train_loss']}")
+```
+
+#### JSON Export
+
+Training info can be exported to JSON format for external analysis:
+
+```python
+# Convert to JSON
+json_info = model.training_info.to_json()
+print(json_info)
+
+# Save to file for analysis
+with open("training_info.json", "w") as f:
+    f.write(json_info)
+```
+
+#### Basic Model Comparison
+
+```python
+# Compare basic metrics across models
+models = [vae_model, gan_model]
+
+for model in models:
+    info = model.training_info.to_dict()
+    print(f"\n{model.model_name}:")
+    print(f"  Loss function: {info['loss_function']}")
+    print(f"  Training samples: {info['train_samples']}")
+    print(f"  Training loss: {info['train_loss']:.4f}")
+    if info['val_loss']:
+        print(f"  Validation loss: {info['val_loss']:.4f}")
+```
+
 
 ---
 
