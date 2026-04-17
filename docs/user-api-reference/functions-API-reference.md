@@ -217,7 +217,7 @@ All functions follow this configuration structure:
 #### Modification Functions
 - Modify existing data
 - Can be applied after generative functions
-- Examples: WhiteNoiseAdder, ScalingFunction
+- Examples: WhiteNoiseAdder, Filters
 
 
 ---
@@ -268,194 +268,27 @@ Creates Parameter instance from JSON data.
 ---
 
 ## Available Functions
+ Functions  currently available in library 
 
-### LinearFunction
+| Function | Type | Description |
+|----------|------|-------------|
+| **LinearFunction** | Generative | Generates linear data following the equation: y = mx + q |
+| **QuadraticFunction** | Generative | Generates quadratic data following the equation: y = ax² + bx + c |
+| **SinusoidalFunction** | Generative | Generates sinusoidal data following the equation: y = a·sin(2·pi·f·x + 2·pi·phi;) + v |
+| **NormalDistributionSample** | Generative | Generates data from normal distribution with specified mean and standard deviation |
+| **WhiteNoiseAdder** | Modification | Adds white noise to existing data with configurable mean and standard deviation |
+| **BurstNoiseAdder** | Modification | Adds bursts of noise to data with specified magnitude and duration |
+| **InnerThreshold** | Filter | Keeps data in a given interval |
+| **LowerThreshold** | Filter | Keeps only values greater than a defined threshold |
+| **OuterThreshold** | Filter | Keeps data outside a given interval |
+| **UpperThreshold** | Filter | Keeps only values lower than a defined threshold |
 
-Generates linear data following the equation: y = mx + q
+### Function Types
 
-#### Configuration
+- **Generative Functions**: Create new data from scratch. Must be the first function applied when generating data.
+- **Modification Functions**: Modify existing data. Can be applied after generative functions or to existing datasets.
+- **Filter Functions**: Filter data based on threshold conditions. Can be applied to clean or constrain data ranges.
 
-```python
-{
-    "feature": "linear_feature",
-    "function_name": "LinearFunction",
-    "parameters": {
-        "m": 2.0,           # Slope
-        "q": 10.0,          # Y-intercept
-        "min_value": 0.0,   # Minimum x value
-        "max_value": 100.0  # Maximum x value
-    }
-}
-```
-
-**Parameters:**
-- `m` (float): Slope of the line
-- `q` (float): Y-intercept
-- `min_value` (float): Minimum input value
-- `max_value` (float): Maximum input value
-
-**Use Cases:**
-- Linear relationships (age vs experience)
-- Proportional data generation
-- Simple trend simulation
-
-### QuadraticFunction
-
-Generates quadratic data following the equation: y = ax² + bx + c
-
-#### Configuration
-
-```python
-{
-    "feature": "quadratic_feature",
-    "function_name": "QuadraticFunction",
-    "parameters": {
-        "a": 0.5,           # Quadratic coefficient
-        "b": 2.0,           # Linear coefficient
-        "c": 5.0,           # Constant term
-        "min_value": 0.0,   # Minimum x value
-        "max_value": 20.0   # Maximum x value
-    }
-}
-```
-
-**Parameters:**
-- `a` (float): Quadratic coefficient
-- `b` (float): Linear coefficient
-- `c` (float): Constant term
-- `min_value` (float): Minimum input value
-- `max_value` (float): Maximum input value
-
-**Use Cases:**
-- Accelerating growth patterns
-- Curved relationships (salary vs experience)
-- Non-linear data generation
-
-### SinusoidalFunction
-
-Generates sinusoidal data following the equation: y = A·sin(ωx + φ)
-
-#### Configuration
-
-```python
-{
-    "feature": "sinusoidal_feature",
-    "function_name": "SinusoidalFunction",
-    "parameters": {
-        "amplitude": 20.0,  # Amplitude (A)
-        "frequency": 0.5,   # Frequency (ω)
-        "phase": 0.0,       # Phase shift (φ)
-        "min_value": 0.0,   # Minimum x value
-        "max_value": 20.0   # Maximum x value
-    }
-}
-```
-
-**Parameters:**
-- `amplitude` (float): Amplitude of the wave
-- `frequency` (float): Frequency of the wave
-- `phase` (float): Phase shift
-- `min_value` (float): Minimum input value
-- `max_value` (float): Maximum input value
-
-**Use Cases:**
-- Seasonal patterns
-- Cyclical data (performance scores)
-- Periodic behavior simulation
-
-### ExponentialFunction
-
-Generates exponential data following the equation: y = a·e^(bx)
-
-#### Configuration
-
-```python
-{
-    "feature": "exponential_feature",
-    "function_name": "ExponentialFunction",
-    "parameters": {
-        "a": 1.0,           # Base coefficient
-        "b": 0.1,           # Exponential coefficient
-        "min_value": 0.0,   # Minimum x value
-        "max_value": 10.0   # Maximum x value
-    }
-}
-```
-
-**Parameters:**
-- `a` (float): Base coefficient
-- `b` (float): Exponential coefficient
-- `min_value` (float): Minimum input value
-- `max_value` (float): Maximum input value
-
-**Use Cases:**
-- Growth patterns
-- Compound interest calculations
-- Exponential decay/growth
-
-### LogarithmicFunction
-
-Generates logarithmic data following the equation: y = a·log(bx) + c
-
-#### Configuration
-
-```python
-{
-    "feature": "logarithmic_feature",
-    "function_name": "LogarithmicFunction",
-    "parameters": {
-        "a": 2.0,           # Coefficient
-        "b": 1.0,           # Base multiplier
-        "c": 0.0,           # Constant term
-        "min_value": 1.0,   # Minimum x value (must be > 0)
-        "max_value": 100.0  # Maximum x value
-    }
-}
-```
-
-**Parameters:**
-- `a` (float): Coefficient
-- `b` (float): Base multiplier
-- `c` (float): Constant term
-- `min_value` (float): Minimum input value (must be > 0)
-- `max_value` (float): Maximum input value
-
-**Use Cases:**
-- Diminishing returns
-- Log-scale data
-- Compressing large ranges
-
-### NormalDistributionSample
-
-Generates data from normal distribution.
-
-#### Configuration
-
-```python
-{
-    "feature": "normal_feature",
-    "function_name": "NormalDistributionSample",
-    "parameters": {
-        "mean": 50.0,        # Mean value
-        "std": 10.0,         # Standard deviation
-        "min_value": 0.0,   # Minimum value (clipping)
-        "max_value": 100.0  # Maximum value (clipping)
-    }
-}
-```
-
-**Parameters:**
-- `mean` (float): Mean of the distribution
-- `std` (float): Standard deviation
-- `min_value` (float): Minimum value for clipping
-- `max_value` (float): Maximum value for clipping
-
-**Use Cases:**
-- Random variation around mean
-- Natural phenomena simulation
-- Noise generation
-
----
 
 ## Complete Usage Examples
 
