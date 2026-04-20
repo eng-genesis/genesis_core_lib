@@ -9,7 +9,7 @@ This guide will get you up and running with GENESIS Core Lib in minutes. You'll 
 ### Prerequisites
 - Python 3.12 or higher
 - pip or uv (https://pypi.org/project/uv/) package manager.
-- Hardware Requirements -> [Here](https://github.com/eng-genesis/genesis_core_lib/docs/standalone-installation.md#hardware-requirements)
+- Hardware Requirements -> [Here](./standalone-installation.md#system-requirements)
 
 ### Option 1: Standard Installation (Recommended)
 ```bash
