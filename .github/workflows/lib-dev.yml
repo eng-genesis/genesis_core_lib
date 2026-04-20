@@ -28,13 +28,17 @@ jobs:
       env:
         EPOCHS: 1
       run: |
-        uv run pytest src/test/ --cov=src --cov-report=xml 
+        uv run pytest src/test/ --cov=src --cov-report=xml --cov-report=html --cov-report=term
 
-    - name: Upload results to Codecov
-      uses: codecov/codecov-action@v5
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
       with:
-        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
         fail_ci_if_error: false
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 
   build_dev:
