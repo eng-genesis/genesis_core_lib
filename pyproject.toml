@@ -43,11 +43,33 @@ dev = [
 
 test = [
     {include-group = "dev"},
-    "pytest"
+    "pytest",
+    "pytest-cov",
+    "coverage[toml]"
 ]
 
 [project.scripts]
 sdg-core-lib = "sdg_core_lib:main"
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "*/test/*",
+    "*/__pycache__/*",
+    "*/tests/*"
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError"
+]
+fail_under = 80
+
+[tool.coverage.html]
+directory = "htmlcov"
 
 [build-system]
 requires = ["uv_build>=0.8.22,<0.9.0"]

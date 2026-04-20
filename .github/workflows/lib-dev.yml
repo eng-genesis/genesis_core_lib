@@ -24,10 +24,19 @@ jobs:
         uv venv
         uv sync --only-group test
 
-    - name: Run AI-LIB tests
+    - name: Run AI-LIB tests with coverage
       env:
         EPOCHS: 1
-      run: uv run pytest src/test/
+      run: |
+        uv run pytest src/test/ --cov=src --cov-report=xml --cov-report=html --cov-report=term
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
 
 
   build_dev:
