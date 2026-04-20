@@ -18,7 +18,14 @@ GENESIS Core Lib is an open-source, advanced synthetic data generation library f
 ## Why use GENESIS core Lib?
 GENESIS Core Lib is the ideal solution for synthetic data generation because it specializes in industrial sensor data and time series applications, offering state-of-the-art models like TimeSeriesVAE that preserve temporal patterns and statistical properties essential for real-world scenarios. It provides immediate access to high-quality synthetic data without the costs and delays of physical sensor deployments, enabling rapid prototyping, algorithm development, and comprehensive testing while maintaining data privacy through synthetic data sharing. The library ensures data fidelity with advanced evaluation metrics including Dynamic Time Warping and correlation preservation, making it perfect for manufacturing IoT, environmental monitoring, energy utilities, and medical device applications where realistic temporal data is critical.
 
-GENESIS Core Lib is a powerful, extensible library for generating high-quality synthetic data using state-of-the-art machine learning models. Perfect for data augmentation, privacy preservation, and ML model testing.
+<figure>
+  <img width="1863" height="738" alt="Difference Generation" src="https://github.com/user-attachments/assets/26578f04-bb40-41d5-a381-a768ceca2d63" />
+  <figcaption>
+    <p>Nyquist plots created merging two time-series of real and imaginary impedances. Can you tell the difference?</p>
+  </figcaption>
+</figure>
+
+
 
 ## ✨ Key Features
 
