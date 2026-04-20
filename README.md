@@ -4,13 +4,12 @@
 [![License](https://img.shields.io/badge/license-AGPLv3-blue.svg)](LICENSE)
 [![PyPI Version](https://img.shields.io/pypi/v/sdg-core-lib.svg)](https://pypi.org/project/sdg-core-lib/)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/sdg-core-lib.svg)](https://pypi.org/project/sdg-core-lib/)
-[![Build Status](https://github.com/emiliocimino/generator_core_lib/workflows/Test%20and%20Build%20Lib/badge.svg)](https://github.com/emiliocimino/generator_core_lib/actions)
+[![Build Status](https://github.com/eng-genesis/genesis_core_lib/workflows/lib-stable.yml/badge.svg)](https://github.com/emiliocimino/generator_core_lib/actions)
 [![Code Coverage](https://img.shields.io/codecov/c/github/emiliocimino/generator_core_lib)](https://codecov.io/gh/emiliocimino/generator_core_lib)
 [![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Type Checking](https://img.shields.io/badge/type%20checking-mypy-blue.svg)](http://mypy-lang.org/)
 [![Documentation](https://img.shields.io/badge/docs-latest-brightgreen.svg)](https://github.com/emiliocimino/generator_core_lib/docs)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-[![Code of Conduct](https://img.shields.io/badge/code%20of%20conduct-blue.svg)](CODE_OF_CONDUCT.md)
+
 
 
 ## What is GENESIS Core Lib?
