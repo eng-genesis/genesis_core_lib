@@ -4,34 +4,31 @@
 [![License](https://img.shields.io/badge/license-AGPLv3-blue.svg)](LICENSE)
 
 
-> 🧬 **Advanced Synthetic Data Generation Library** for Python 3.12+
+## What is GENESIS Core Lib?
+GENESIS Core Lib is an advanced synthetic data generation library for Python 3.12+ that provides state-of-the-art machine learning models including VAEs (TabularVAE, TimeSeriesVAE) and CTGAN for generating high-quality tabular and time series data. The library features adaptive on-the-fly training with automatic model adaptation to data characteristics, model persistence for reusing trained models, behavior control through custom mathematical functions, and integrated quality evaluation metrics. Designed with privacy preservation in mind and optimized for both CPU and GPU processing, it offers a comprehensive Job API for data augmentation, privacy preservation, and ML model testing across various data types and use cases.
+
+## Why use GENESIS core Lib?
+GENESIS Core Lib is the ideal solution for synthetic data generation because it specializes in industrial sensor data and time series applications, offering state-of-the-art models like TimeSeriesVAE that preserve temporal patterns and statistical properties essential for real-world scenarios. It provides immediate access to high-quality synthetic data without the costs and delays of physical sensor deployments, enabling rapid prototyping, algorithm development, and comprehensive testing while maintaining data privacy through synthetic data sharing. The library ensures data fidelity with advanced evaluation metrics including Dynamic Time Warping and correlation preservation, making it perfect for manufacturing IoT, environmental monitoring, energy utilities, and medical device applications where realistic temporal data is critical.
 
 GENESIS Core Lib is a powerful, extensible library for generating high-quality synthetic data using state-of-the-art machine learning models. Perfect for data augmentation, privacy preservation, and ML model testing.
 
 ## ✨ Key Features
 
-- 🎯 **Multiple Model Types**: VAEs (TabularVAE, TimeSeriesVAE) and CTGAN
-- 📊 **Data Type Support**: Tabular data, time series with group_index, and custom datasets
-- 🔧 **Function-Based Generation**: Mathematical functions for controlled data generation
-- 📈 **Quality Evaluation**: Built-in metrics for data quality assessment
-- 🚀 **High Performance**: Optimized for both CPU and GPU processing
-- 🔒 **Privacy Focused**: Designed with privacy preservation in mind
+- **Generative AI Architectures**: Advanced VAEs (TabularVAE, TimeSeriesVAE) and CTGAN for Tabular and Time series data
+- **Adaptive Training**: On-the-fly model training with automatic adaptation to your data characteristics
+- **Model Persistence**: Save and reuse trained generative models for consistent data generation
+- **Behavior Control**: Manipulate generation patterns with custom mathematical functions
+- **Integrated Evaluation**: Built-in quality assessment metrics for comprehensive data evaluation
+- **High Performance**: Optimized for both CPU and GPU processing
 
-## 🛠️ Installation
+## 🛠️ Quick Start
 
 ### Quick Install
 ```bash
 pip install sdg-core-lib
 ```
 
-### Development Install
-```bash
-git clone https://github.com/emiliocimino/generator_core_lib.git
-cd generator_core_lib
-pip install -e ".[dev]"
-```
-
-## 🚀 Quick Start
+### 🚀 Try it
 
 ```python
 from sdg_core_lib import Job
@@ -85,38 +82,17 @@ print(f"Quality metrics: {metrics}")
 
 📖 **See [Quick Start Guide](docs/quick-start.md) for detailed examples**
 
-## 🔧 Function-Based Generation
-
-```python
-# Generate data using mathematical functions
-from sdg_core_lib import Job
-
-functions = [
-    {
-        "feature": "linear_data",
-        "function_name": "LinearFunction",
-        "parameters": {
-            "m": 2.0,
-            "q": 1.0,
-            "min_value": 0.0,
-            "max_value": 100.0
-        }
-    }
-]
-
-job = Job(n_rows=100, functions=functions)
-synthetic_data = job.generate_from_functions()
-```
 
 ## 📚 Documentation
 
 ### 📖 [User Documentation](docs/user-documentation.md)
 Complete guide for users including:
-- Core concepts and architecture
-- Data types (tabular, time series, custom)
-- Model configurations (VAEs, CTGAN)
-- API reference and examples
-- Best practices and troubleshooting
+- Core concepts and the Job API
+- Data Types and [Datasets](docs/user-api-reference/dataset-API-reference.md)
+- Fantastic [Models](docs/user-api-reference/model-API-reference.md) and how to use them
+- How to handle raw data with [Processors](docs/user-api-reference/processor-API-reference.md) 
+- How to control generation of synthetic data with [Functions](docs/user-api-reference/functions-API-reference.md)
+- Evaluate your work with [Evaluators](docs/user-api-reference/evaluation-API-reference.md)
 
 ### 🔧 [Developer Documentation](docs/developer-documentation.md)
 Technical documentation for developers:
@@ -139,46 +115,14 @@ Hands-on tutorial covering:
 - Advanced techniques
 - Performance optimization
 
+## Roadmap
+A detailed Roadmap can be found [here](docs/roadmap.md).
 
-## 🏗️ Architecture
-
-GENESIS Core Lib follows a modular architecture:
-
-- **Data Generator**: ML models (TabularVAE, TimeSeriesVAE, CTGAN)
-- **Dataset**: Data abstraction (Table, TimeSeries) with proper column structure
-- **Preprocess**: Data transformation and normalization strategies
-- **Postprocess**: Function application and data modification
-- **Evaluate**: Quality assessment and statistical metrics
 
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
 
-### Development Setup
-```bash
-# Clone repository
-git clone https://github.com/emiliocimino/generator_core_lib.git
-cd generator_core_lib
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install in development mode
-pip install -e ".[dev]"
-```
-
-### Running Tests
-```bash
-# Run all tests
-pytest
-
-# Run with coverage
-pytest --cov=sdg_core_lib
-
-# Run specific test file
-pytest tests/test_job.py
-```
 
 ## 📄 License
 

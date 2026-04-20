@@ -25,7 +25,7 @@ This roadmap outlines the development plans and future direction for GENESIS Cor
 
 ---
 
-## Version 0.2.0: Enhanced Quality & Flexibility
+## Versions 0.[2-3-4].x: Enhancing
 
 ### 🎯 Focus Areas
 Improve existing model quality, add flexibility, and enhance evaluation capabilities.
@@ -55,73 +55,58 @@ Improve existing model quality, add flexibility, and enhance evaluation capabili
 - **Quality Dashboard**: Comprehensive visual quality assessment dashboard
 
 
-#### Configurable and Auto Hyperparameter Tuning
-- **Bayesian Optimization**: Automated hyperparameter search using Bayesian methods
-- **Grid/Random Search**: Traditional hyperparameter optimization techniques
-- **Genetic Algorithms**: Evolution-based hyperparameter tuning
-- **Multi-Objective Optimization**: Balance between multiple quality metrics
-- **Hyperparameter Importance**: Analysis of which hyperparameters matter most
-
-
-
 ---
 
-## Version 0.3.0: Multi-Modal Generation & Enterprise Features
+## Versions 0.[5-6-7].x: The big update
 
 ### 🎯 Focus Areas
-Expand to new data types and add enterprise-grade capabilities.
+Expand to new and mixed data types.
 
 ### 🆕 New Features
 
 #### Image Generation
-- **GAN-Based Image Synthesis**: DCGAN, StyleGAN, and Progressive GAN architectures
-- **VAE Image Generation**: Variational autoencoders for image synthesis
-- **Conditional Image Generation**: Generate images based on text or other conditions
+- **Introducing the "Image" Data Type**. Images will be introduced as a new dataset type
+- **Model improvement**: VAEs and GANs will be  able to generate images
+- **Image Processing**: Basic image processing capabilities
+- **Diffusion Models**: We plan to introduce diffusion models
 
 #### Text Generation
-- **Language Model Integration**: LLM-based generation for simple texts
-- **Document Generation**: Generate documents based on text or other conditions
+- **Introducing the "Text" Data Type**. Text will be introduced as a new dataset type
+- **New models**: Transformer architectures will join the party
+- **Text Processing**: Basic text processing capabilities
 
-#### Automatic Scaling on Nodes
-- **Distributed Training**: Multi-GPU and multi-node training support
-- **Elastic Scaling**: Automatic resource allocation based on workload
-- **Load Balancing**: Intelligent distribution of generation tasks
-- **Fault Tolerance**: Automatic recovery from node failures
-- **Resource Optimization**: Efficient utilization of computational resources
 
-#### Enterprise Features
-- **Role-Based Access Control**: Granular permissions and user management
-- **Audit Logging**: Comprehensive audit trails and compliance tracking
-- **Data Governance**: Built-in data classification and governance features
-- **Encryption**: End-to-end encryption for sensitive data
-- **API Management**: RESTful API with rate limiting and authentication
-- **Monitoring & Alerting**: Real-time monitoring and alerting system
+#### Configurable and Auto Hyperparameter Tuning
+- **Bayesian Optimization**: Automated hyperparameter search using Bayesian methods
+- **Grid/Random Search**: Traditional hyperparameter optimization techniques
+- **Genetic Algorithms**: Evolution-based hyperparameter tuning
+- **Automatic selection**: Automatic selection of the best hyperparameters based on generation quality
 
 ---
 
-## Version 0.4.0: Advanced Analytics & Intelligence
+## Version 0.[7-8-9].x: Advanced Analytics & Intelligence
 
 ### 🎯 Focus Areas
 Add intelligent features and advanced analytics capabilities.
 
 ### 🆕 New Features
 
-#### Advanced Analytics
+#### Mixed Datasets
+- **Mixed Datasets**: Generate datasets containing different kind of Data Types
+- **Mixed Models**: Models can now be "tied" together to generate mixed datasets.
+
+#### Improved Generation focus
 - **Causal Inference**: Generate data preserving causal relationships
 - **Anomaly Detection**: Identify and handle anomalies in synthetic data
-- **Drift Detection**: Monitor and adapt to concept drift in real-time
 - **Explainable AI**: Explain generation decisions and model behavior
-- **Fairness Metrics**: Ensure synthetic data meets fairness requirements
 
 #### Intelligent Automation
 - **AutoML Integration**: Automated model selection and hyperparameter tuning
 - **Smart Data Augmentation**: Intelligent augmentation strategies based on data characteristics
 - **Adaptive Generation**: Models that adapt to new data patterns automatically
-- **Quality Prediction**: Predict generation quality before training
 - **Resource Prediction**: Estimate computational requirements upfront
 
 #### Advanced Visualization
-- **3D Data Visualization**: Support for 3D data visualization and comparison
 - **Interactive Dashboards**: Real-time interactive visualization dashboards
 - **Comparative Analysis**: Advanced tools for comparing multiple generation methods
 - **Custom Reports**: Automated generation of quality and analysis reports
