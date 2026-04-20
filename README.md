@@ -5,7 +5,7 @@
 [![PyPI Version](https://img.shields.io/pypi/v/sdg-core-lib.svg)](https://pypi.org/project/sdg-core-lib/)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/sdg-core-lib.svg)](https://pypi.org/project/sdg-core-lib/)
 [![Test and Build Lib](https://github.com/eng-genesis/genesis_core_lib/actions/workflows/lib-stable.yml/badge.svg)](https://github.com/eng-genesis/genesis_core_lib/actions/workflows/lib-stable.yml)
-[![codecov](https://codecov.io/gh/eng-genesis/genesis_core_lib/graph/badge.svg?token=RMOVSN2X0H)](https://codecov.io/gh/eng-genesis/genesis_core_lib)
+[![codecov](https://codecov.io/gh/eng-genesis/genesis_core_lib/branch/dev/graph/badge.svg?token=RMOVSN2X0H)](https://codecov.io/gh/eng-genesis/genesis_core_lib)
 [![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Type Checking](https://img.shields.io/badge/type%20checking-mypy-blue.svg)](http://mypy-lang.org/)
 [![Documentation](https://img.shields.io/badge/docs-latest-brightgreen.svg)](https://github.com/emiliocimino/generator_core_lib/docs)
@@ -13,7 +13,7 @@
 
 
 ## What is GENESIS Core Lib?
-GENESIS Core Lib is an advanced synthetic data generation library for Python 3.12+ that provides state-of-the-art machine learning models including VAEs (TabularVAE, TimeSeriesVAE) and CTGAN for generating high-quality tabular and time series data. The library features adaptive on-the-fly training with automatic model adaptation to data characteristics, model persistence for reusing trained models, behavior control through custom mathematical functions, and integrated quality evaluation metrics. Designed with privacy preservation in mind and optimized for both CPU and GPU processing, it offers a comprehensive Job API for data augmentation, privacy preservation, and ML model testing across various data types and use cases.
+GENESIS Core Lib is an open-source, advanced synthetic data generation library for Python 3.12+ that provides state-of-the-art machine learning models including VAEs (TabularVAE, TimeSeriesVAE) and CTGAN for generating high-quality tabular and time series data. The library features adaptive on-the-fly training with automatic model adaptation to data characteristics, model persistence for reusing trained models, behavior control through custom mathematical functions, and integrated quality evaluation metrics. Designed with privacy preservation in mind and optimized for both CPU and GPU processing, it offers a comprehensive Job API for data augmentation, privacy preservation, and ML model testing across various data types and use cases.
 
 ## Why use GENESIS core Lib?
 GENESIS Core Lib is the ideal solution for synthetic data generation because it specializes in industrial sensor data and time series applications, offering state-of-the-art models like TimeSeriesVAE that preserve temporal patterns and statistical properties essential for real-world scenarios. It provides immediate access to high-quality synthetic data without the costs and delays of physical sensor deployments, enabling rapid prototyping, algorithm development, and comprehensive testing while maintaining data privacy through synthetic data sharing. The library ensures data fidelity with advanced evaluation metrics including Dynamic Time Warping and correlation preservation, making it perfect for manufacturing IoT, environmental monitoring, energy utilities, and medical device applications where realistic temporal data is critical.
@@ -123,9 +123,13 @@ Info about installation:
 - Environment Variables
 - GPU Support
 
-## Roadmap
-A detailed Roadmap can be found [here](docs/roadmap.md).
+## [Roadmap](docs/roadmap.md)
+A detailed Roadmap can be found following the Roadmap Link
 
+#### TL;DR
+**Pre-1.0**: Enhanced model quality, flexible architectures, advanced evaluation metrics, and expansion to images/text generation with auto hyperparameter tuning.
+
+**Post-1.0**: Production-ready stability, mixed data types, intelligent automation, cloud integration, and advanced AI capabilities including federated learning and quantum computing exploration. 
 
 ## 🤝 Contributing
 
