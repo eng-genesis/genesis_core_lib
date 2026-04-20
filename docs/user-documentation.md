@@ -192,11 +192,21 @@ model_config = {
 }
 ```
 
-**Features:**
 - Stable training process
 - Interpretable latent space
 - Good for feature analysis
 - Handles missing values well
+
+##### AutoTabularVAE
+```python
+model_config = {
+    "algorithm_name": "sdg_core_lib.data_generator.models.VAEs.implementation.AutoTabularVAE.AutoTabularVAE",
+    "model_name": "auto_tabular_vae_model"
+}
+```
+- Longer Training Times (10x)
+- Same as Tabular VAE
+- Grid Searches Hyperparameters
 
 ##### TimeSeriesVAE
 ```python
@@ -206,7 +216,6 @@ model_config = {
 }
 ```
 
-**Features:**
 - Captures temporal dependencies
 - Handles variable-length sequences
 - Preserves temporal patterns
@@ -237,7 +246,6 @@ model_config = {
 }
 ```
 
-**Features:**
 - Handles mixed data types
 - Preserves feature correlations
 - Good for medium-sized datasets (1K-100K rows)
