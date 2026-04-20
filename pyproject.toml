@@ -1,7 +1,7 @@
 [project]
 name = "sdg-core-lib"
 version = "0.1.9"
-description = "Add your description here"
+description = "Advanced synthetic data generation library"
 license = "AGPL-3.0"
 readme = "README.md"
 authors = [
@@ -49,7 +49,7 @@ test = [
 ]
 
 [project.scripts]
-sdg-core-lib = "sdg_core_lib:main"
+sdg-core-lib = "genesis_core_lib:main"
 
 [tool.coverage.run]
 source = ["src"]

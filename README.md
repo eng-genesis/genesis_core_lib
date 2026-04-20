@@ -116,12 +116,12 @@ Get started immediately with:
 - Common use cases
 - Troubleshooting tips
 
-### 📋 [Step-by-Step Tutorial](docs/step-by-step-tutorial.md)
-Hands-on tutorial covering:
-- Complete project workflow
-- Real-world examples
-- Advanced techniques
-- Performance optimization
+### 📋 [Standalone Installation](docs/standalone-installation.md)
+Info about installation:
+- Requirements
+- Installation instructions
+- Environment Variables
+- GPU Support
 
 ## Roadmap
 A detailed Roadmap can be found [here](docs/roadmap.md).

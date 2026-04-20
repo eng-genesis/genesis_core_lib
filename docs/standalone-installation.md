@@ -153,17 +153,6 @@ export CUDA_VISIBLE_DEVICES=0
 export TF_FORCE_GPU_ALLOW_GROWTH=true
 ```
 
-#### Hyperparameter Environment Variables
-```bash
-# Training hyperparameters
-export EPOCHS=100
-export LEARNING_RATE=0.001
-export BATCH_SIZE=32
-
-# Model settings
-export MODEL_SAVE_PATH=./models
-```
-
 ## Dependency Management
 
 ### Core Dependencies

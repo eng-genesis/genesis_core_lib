@@ -25,12 +25,10 @@ This roadmap outlines the development plans and future direction for GENESIS Cor
 
 ---
 
-## Versions 0.[2-3-4].x: Enhancing
+## Pre-Stable Updates (< 1.0.0): Additional Content to develop
 
-### 🎯 Focus Areas
+### 🎯 Focus Area: Improve the codebase
 Improve existing model quality, add flexibility, and enhance evaluation capabilities.
-
-### 🆕 New Features
 
 #### Better Quality Improvements on Existing Models
 - **Model Architecture Improvements**: Enhanced neural network architectures for better data synthesis
@@ -57,12 +55,8 @@ Improve existing model quality, add flexibility, and enhance evaluation capabili
 
 ---
 
-## Versions 0.[5-6-7].x: The big update
-
-### 🎯 Focus Areas
-Expand to new and mixed data types.
-
-### 🆕 New Features
+### 🎯 Focus Areas: Open to new data types
+GENESIS will be able to generate Images, Text, and other data types.
 
 #### Image Generation
 - **Introducing the "Image" Data Type**. Images will be introduced as a new dataset type
@@ -84,10 +78,8 @@ Expand to new and mixed data types.
 
 ---
 
-## Version 0.[7-8-9].x: Advanced Analytics & Intelligence
-
-### 🎯 Focus Areas
-Add intelligent features and advanced analytics capabilities.
+### 🎯 Focus Area: Finalization
+Add support for mixed data types, advanced reporting and visualization
 
 ### 🆕 New Features
 
