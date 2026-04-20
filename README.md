@@ -5,7 +5,7 @@
 [![PyPI Version](https://img.shields.io/pypi/v/sdg-core-lib.svg)](https://pypi.org/project/sdg-core-lib/)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/sdg-core-lib.svg)](https://pypi.org/project/sdg-core-lib/)
 [![Test and Build Lib](https://github.com/eng-genesis/genesis_core_lib/actions/workflows/lib-stable.yml/badge.svg)](https://github.com/eng-genesis/genesis_core_lib/actions/workflows/lib-stable.yml)
-[![Code Coverage](https://img.shields.io/codecov/c/github/eng-genesis/genesis_core_lib)](https://codecov.io/gh/eng-genesis/genesis_core_lib)
+[![codecov](https://codecov.io/gh/eng-genesis/genesis_core_lib/graph/badge.svg?token=RMOVSN2X0H)](https://codecov.io/gh/eng-genesis/genesis_core_lib)
 [![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Type Checking](https://img.shields.io/badge/type%20checking-mypy-blue.svg)](http://mypy-lang.org/)
 [![Documentation](https://img.shields.io/badge/docs-latest-brightgreen.svg)](https://github.com/emiliocimino/generator_core_lib/docs)
