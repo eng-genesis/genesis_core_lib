@@ -20,7 +20,8 @@ The `Job` class is the central orchestrator in GENESIS Core Lib. It manages the 
 
 #### Job Lifecycle
 
-<img width="4273" height="1255" alt="image" src="https://github.com/user-attachments/assets/e2297190-a83d-4cc7-b831-141b23018dc8" />
+<img width="4273" height="1255" alt="image" src="https://github.com/user-attachments/assets/f9f63c87-c5d8-46a0-bcd9-094fd4f0f202" />
+
 
 - **Red**: training-specific flow
 - **Blue**: infer-only flow
