@@ -371,17 +371,5 @@ Custom datasets are useful for:
 - **Audio Data**: Time series with frequency domain features
 - **Multimodal Data**: Combined data from different sources
 
-## Integration with Models
-
-Ensure your custom dataset works with existing models or create model-specific adapters:
-
-```python
-def get_shape_for_model(self) -> str:
-    """Return shape string compatible with model configuration"""
-    if self.model_type == "graph_neural_network":
-        return f"({self.num_nodes}, {self.node_features})"
-    else:
-        return super().get_shape_for_model()
-```
 
 This guide provides the foundation for creating custom datasets. Adapt the examples to your specific data requirements and use cases.
