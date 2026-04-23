@@ -99,6 +99,7 @@ This class can be consulted for understaning how to build a parameter.
 
 Custom functions should be organized in the following structure:
 
+```
 src/sdg_core_lib/post_process/functions/
 ├── UnspecializedFunction.py            # Base class
 ├── Parameter.py                        # Parameter class
@@ -109,6 +110,7 @@ src/sdg_core_lib/post_process/functions/
         ├── filter_text.py              # Text processing functions
         ├── numeric_threshold.py        # Numeric/mathematical functions
         ...
+```
 
 
 **Important: ⚠️** The `implementation/` folder is where you should write your new functions. This separates custom implementations from the core framework.
