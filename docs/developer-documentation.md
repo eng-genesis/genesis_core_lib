@@ -65,10 +65,9 @@ The dataset module provides the fundamental data structures:
 The model system supports various ML approaches:
 
 - **`UnspecializedModel`**: Abstract base class for all models
-- **VAEs**: Variational Autoencoders (TabularVAE, TimeSeriesVAE, AutoTabularVAE)
-- **GANs**: Generative Adversarial Networks (CTGAN)
 - **ModelInfo**: Model metadata and configuration
 - **TrainingInfo**: Training configuration and tracking
+- **`implementation` folder**: contain ready-to-use architectures
 
 ### 3. Processors (`preprocess/`)
 
@@ -85,8 +84,7 @@ Post-processing and transformation functions:
 
 - **`UnspecializedFunction`**: Base function class
 - **`Parameter`**: Function parameter handling
-- **Function Factory**: Dynamic function instantiation
-- **Various Function Types**: Distribution evaluators, filters, transformations
+- **`implementation` folder**: contain ready-to-use functions
 
 ### 5. Evaluators (`evaluate/`)
 
