@@ -220,6 +220,7 @@ class GraphDataset(Dataset):
         
         return GraphDataset(postprocessed_nodes, postprocessed_edges, self.adjacency_matrix)
     
+    # Example helper method to create columns
     @staticmethod
     def _create_column(col_data: dict) -> Column:
         """Helper method to create appropriate column type"""
@@ -232,13 +233,17 @@ class GraphDataset(Dataset):
             return Numeric(col_name, col_datatype, 0, col_values, col_type)
         else:
             return Column(col_name, col_datatype, 0, col_values, col_type)
+        
+    # [Insert here your Dataset-Specific helper methods]
 ```
+
+Any additional helper method is welcome to be added to the class.
 
 ## Key Implementation Considerations
 
 ### 1. Data Validation
 
-Always validate input data using the existing schema validators:
+Always validate input data (JSON or Skeletons) using the existing schema validators:
 
 ```python
 from sdg_core_lib.dataset.validation_schema import FeatureData, DataSkeleton
@@ -266,7 +271,7 @@ class GraphNodeColumn(Column):
     def __init__(self, name: str, value_type: str, position: int, 
                  values: np.ndarray, node_id: str):
         super().__init__(name, value_type, position, values, "node_feature")
-        self.node_id = node_id
+        self.node_id = node_id # This may come from an internal Dataset Method
 ```
 
 ### 3. Data Shape Handling
@@ -284,38 +289,26 @@ def get_computing_shape(self) -> tuple[int, ...]:
         return (batch_size, feature_dim)
 ```
 
-### 4. Processor Integration
+## Using Custom Datasets
 
-Ensure your dataset works with existing processors:
-
-```python
-def preprocess(self, processor: Processor) -> "GraphDataset":
-    """Integrate with existing processor system"""
-    # Process each component separately if needed
-    processed_components = []
-    
-    for component in self.get_components():
-        processed = processor.process([component])
-        processed_components.extend(processed)
-    
-    return self.__class__(processed_components, *self.get_other_args())
-```
-
-## Registering Custom Datasets
-
-To make your custom dataset discoverable, register it in the appropriate module:
+Custom datasets are used directly where needed. Import your custom dataset where needed:
 
 ```python
-# In src/sdg_core_lib/dataset/__init__.py
-from .custom_datasets import GraphDataset
+# In a job
+from sdg_core_lib.dataset.datasets import GraphDataset
 
-# Add to registry
-DATASET_REGISTRY = {
-    "table": Table,
-    "time_series": TimeSeries,
-    "graph": GraphDataset,  # Your custom dataset
-}
+# Use your custom dataset directly
+def create_dataset(dataset_config):
+    if dataset_config["dataset_type"] == "graph":
+        return GraphDataset.from_json(dataset_config["data"])
+    # ... other dataset types
 ```
+
+### ⚠️ Integrate Custom Datasets
+
+⚠️ Available models generally don't support custom datasets with custom data types. The given example may be an exception, since is build on a fictional Graph Dataset.
+
+⚠️ Processors for such a Dataset may be different from available ones. You may need to [implement your own processor](custom-processors.md).
 
 ## Testing Custom Datasets
 
