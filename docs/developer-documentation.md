@@ -54,11 +54,9 @@ The library uses several design patterns to ensure extensibility:
 The dataset module provides the fundamental data structures:
 
 - **`Dataset`**: Abstract base class for all data types
-  - **`Table`**: Tabular data implementation with columns
-  - **`TimeSeries`**: Time series data extending Table
+  - **Specialized Datasets**: Dataset that extends the common dataset
 - **`Column`**: Base column class with metadata 
-  - **`Numeric`**: Numeric column implementation
-  - **`Categorical`**: Categorical column implementation
+  - **Specialized Columns**: Encapsulate essence of Data Types
 
 ### 2. Models (`data_generator/models/`)
 
