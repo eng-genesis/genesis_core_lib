@@ -95,6 +95,8 @@ Quality assessment components:
 ## Extension Guides
 
 The following guides provide detailed instructions for creating custom components:
+⚠️ **IMPORTANT WARNING:** Most content in the following docs is AI-generated and may contain errors. Use this as a basis for understanding the base mechanisms of the library. You can also try and import the code, but always verify the code and logic before using it. 
+The reason why this code is not included in the library is that it is AI-generated and needs to be verified. You probably will see the cited examples in following releases. ⚠️
 
 - **[Custom Datasets](./developers/custom-datasets.md)** - Creating new data types and structures
 - **[Custom Data Types](./developers/custom-data-types.md)** - Implementing new column types
@@ -102,6 +104,115 @@ The following guides provide detailed instructions for creating custom component
 - **[Custom Functions](./developers/custom-functions.md)** - Creating transformation and utility functions
 - **[Custom Models](./developers/custom-models.md)** - Implementing new machine learning models
 - **[Custom Evaluators](./developers/custom-evaluators.md)** - Building quality assessment tools
+
+## Integration with Job System
+
+After creating custom components, you need to register them in the `mappings.py` file to make them available to the Job orchestrator. The mappings system uses a hierarchical approach to associate dataset types with their corresponding evaluators, processors, and models.
+
+### Understanding the Mapping Structure
+
+The `mappings.py` file contains three main mapping classes:
+
+1. **`DatasetMapping`** (Abstract base class)
+   - Defines the interface for all dataset type mappings
+   - Contains default fallback mappings
+
+2. **`DatasetTypeMapping`** (Concrete implementations like `TableMapping`, `TimeSeriesMapping`)
+   - Maps specific dataset types to their components
+   - Associates: `dataset` → `evaluator` → `processor`
+
+3. **`ModelStrategyMapping`**
+   - Maps model classes to their preprocessing strategies
+   - Ensures compatible model-strategy pairings
+
+### Adding New Dataset Types
+
+To integrate a new dataset type (e.g., `TextDataset`):
+
+1. **Create a new mapping class** that inherits from `DatasetMapping`:
+
+```python
+class TextMapping(DatasetMapping):
+    mapping = {
+        "dataset": TextDataset,
+        "evaluator": TextComparisonEvaluator,
+        "processor": TextProcessor,
+    }
+```
+
+2. **Import your custom components** at the top of `mappings.py`:
+
+```python
+from sdg_core_lib.dataset.datasets import TextDataset
+from sdg_core_lib.evaluate.text import TextComparisonEvaluator
+from sdg_core_lib.preprocess.text_processor import TextProcessor
+```
+
+### Adding New Models and Strategies
+
+To integrate a new model with its preprocessing strategy:
+
+1. **Add to ModelStrategyMapping**:
+
+```python
+class ModelStrategyMapping:
+    mapping = {
+        # ... existing mappings ...
+        YourNewModel: YourNewModelPreprocessingStrategy,
+    }
+```
+
+2. **Import the components**:
+
+```python
+from your_module.models import YourNewModel
+from your_module.strategies import YourNewModelPreprocessingStrategy
+```
+
+### Registration Process
+
+The Job system automatically discovers and uses these mappings:
+
+1. **Dataset Type Resolution**: When a Job is created with a dataset type, it looks up the corresponding mapping class
+2. **Component Instantiation**: The Job uses the mapping to instantiate the correct evaluator and processor
+3. **Model-Strategy Matching**: When a model is specified, the `ModelStrategyMapping` provides the compatible preprocessing strategy
+
+### Example Integration
+
+Here's a complete example for adding a custom `TextDataset`:
+
+```python
+# In mappings.py
+from sdg_core_lib.dataset.datasets import TextDataset
+from sdg_core_lib.evaluate.text import TextComparisonEvaluator
+from sdg_core_lib.preprocess.text_processor import TextProcessor
+from sdg_core_lib.data_generator.models.text.implementation.TextGenerationModel import TextGenerationModel
+from sdg_core_lib.preprocess.strategies.textgeneration_strategy import TextGenerationModelPreprocessingStrategy
+
+class TextMapping(DatasetMapping):
+    mapping = {
+        "dataset": TextDataset,
+        "evaluator": TextComparisonEvaluator,
+        "processor": TextProcessor,
+    }
+
+class ModelStrategyMapping:
+    mapping = {
+        # ... existing mappings ...
+        TextGenerationModel: TextGenerationModelPreprocessingStrategy,
+    }
+```
+
+### Best Practices for Mapping Updates
+
+1. **Consistent Naming**: Use descriptive names that clearly indicate the dataset type
+2. **Import Organization**: Group imports by module type (dataset, evaluate, preprocess, models)
+3. **Documentation**: Add comments explaining the purpose of new mappings
+4. **Testing**: Verify that the Job system can correctly instantiate your components
+5. **Backward Compatibility**: Ensure existing mappings remain functional when adding new ones
+
+
+This approach allows external modules to register their mappings without modifying the core `mappings.py` file.
 
 ## Development Best Practices
 
