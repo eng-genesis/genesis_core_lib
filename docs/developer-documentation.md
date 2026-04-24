@@ -158,15 +158,15 @@ To integrate a new model with its preprocessing strategy:
 class ModelStrategyMapping:
     mapping = {
         # ... existing mappings ...
-        YourNewModel: YourNewModelPreprocessingStrategy,
+        TextGenerationModel: TextGenerationModelPreprocessingStrategy,
     }
 ```
 
 2. **Import the components**:
 
 ```python
-from your_module.models import YourNewModel
-from your_module.strategies import YourNewModelPreprocessingStrategy
+from sdg_core_lib.data_generator.models.text.implementation.TextGenerationModel import TextGenerationModel
+from sdg_core_lib.preprocess.strategies.textgeneration_strategy import TextGenerationModelPreprocessingStrategy
 ```
 
 ### Registration Process
