@@ -29,7 +29,7 @@ class TimeSeriesComparisonEvaluator(TabularComparisonEvaluator):
             raise ValueError("synthetic_data must be a TimeSeries")
         super().__init__(real_data, synthetic_data)
 
-    def compute(self):
+    def compute(self) -> dict:
         numerical_columns = self._real_data.get_numeric_columns()
         categorical_columns = self._real_data.get_categorical_columns()
         if len(numerical_columns) < 1 and len(categorical_columns) < 1:

@@ -8,7 +8,8 @@ This guide will get you up and running with GENESIS Core Lib in minutes. You'll 
 
 ### Prerequisites
 - Python 3.12 or higher
-- pip or uv package manager
+- pip or uv (https://pypi.org/project/uv/) package manager.
+- Hardware Requirements -> [Here](./standalone-installation.md#system-requirements)
 
 ### Option 1: Standard Installation (Recommended)
 ```bash
@@ -20,12 +21,6 @@ pip install sdg-core-lib
 uv add sdg-core-lib
 ```
 
-### Option 3: Development Installation
-```bash
-git clone https://github.com/emiliocimino/generator_core_lib.git
-cd generator_core_lib
-pip install -e ".[dev]"
-```
 
 ### Verify Installation
 ```python
@@ -41,8 +36,8 @@ print("GENESIS Core Lib installed successfully!")
 from sdg_core_lib import Job
 import json
 
-# Load configuration from JSON file (similar to test files)
-with open('your_config.json', 'r') as f:
+# Load configuration from JSON file (You will find it in docs folder)
+with open('table_example.json', 'r') as f:
     config = json.load(f)
 
 # Create and run the job
@@ -128,15 +123,33 @@ print(f"Total rows generated: {len(synthetic_data)}")
 ### Expected Output
 ```
 Generated data:
-Row 1: {'linear_data': [1.0, 3.02, 5.04, ...], 'quadratic_data': [...], 'sinusoidal_data': [...]}
-Row 2: {'linear_data': [...], 'quadratic_data': [...], 'sinusoidal_data': [...]}
-Row 3: {'linear_data': [...], 'quadratic_data': [...], 'sinusoidal_data': [...]}
-Row 4: {'linear_data': [...], 'quadratic_data': [...], 'sinusoidal_data': [...]}
-Row 5: {'linear_data': [...], 'quadratic_data': [...], 'sinusoidal_data': [...]}
+[
+  {
+    "column_data": [3.0, 5.0, 7.0, 9.0, 11.0, ...],
+    "column_name": "linear_data",
+    "column_type": "continuous",
+    "column_datatype": "float64"
+  },
+  {
+    "column_data": [0.0, -3.0, -4.0, -3.0, 0.0, ...],
+    "column_name": "quadratic_data",
+    "column_type": "continuous",
+    "column_datatype": "float64"
+  },
+  {
+    "column_data": [0.0, 0.0998, 0.1987, 0.2955, 0.3894, ...],
+    "column_name": "sinusoidal_data",
+    "column_type": "continuous",
+    "column_datatype": "float64"
+  }
+]
 Total rows generated: 50
 ```
 
-## Working with Real Data
+## Working with Tabular Data
+
+
+Tabular data is structured as a list of column dictionaries, where each dictionary represents a column in the table. Each dictionary contains the column data, name, type, and datatype. For example:
 
 ### Load and Process Data
 
@@ -189,6 +202,8 @@ print(f"Quality metrics: {metrics}")
 
 ### Generate Sequential Data
 
+To generate sequential data, you need to provide a time series structure. The TimeSeries dataset requires a column of type `group_index` to identify isolated experiments. The group index divides the data into groups, where each group represents an independent time series experiment. All groups must have the same size for proper time series processing.
+
 ```python
 from sdg_core_lib import Job
 import json
@@ -198,13 +213,25 @@ time_series_config = {
     "dataset_type": "time_series",
     "data": [
         {
-            "column_data": [1.0, 1.1, 1.2, 1.3, 1.4],
+            "column_data": [1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 4.0, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9],
             "column_name": "value",
             "column_type": "continuous",
             "column_datatype": "float64"
+        },
+        {
+            "column_data": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            "column_name": "group_index",
+            "column_type": "group_index",
+            "column_datatype": "int64"
         }
+        
     ]
 }
+
+# In this example:
+# - Group 0 (index 0): values [1.0, 1.1, 1.2, 1.3, 1.4] - 20 time steps
+# - Group 1 (index 1): values [2.0, 2.1, 2.2, 2.3, 2.4] - 20 time steps  
+# Each group has the same size (5 time steps) which is required for TimeSeries datasets
 
 # Use TimeSeriesVAE for time series data
 time_series_model_config = {
@@ -263,6 +290,35 @@ job = Job(
         "training_data_info": schema  # Schema from previous training
     }
 )
+
+# Example data skeleton using Dataset validation
+# Skeleton defines the structure without actual data values
+data_skeleton = [
+    {
+        "column_name": "feature_1",
+        "column_datatype": "float64",
+        "column_type": "continuous",
+        "column_position": 0,
+        "column_size": 1
+    },
+    {
+        "column_name": "category_feature", 
+        "column_datatype": "int64",
+        "column_type": "categorical",
+        "column_position": 1,
+        "column_size": 1
+    }
+]
+
+# Skeleton explanation:
+# - column_name: Name of the feature/column
+# - column_datatype: Data type (float64, int64, etc.)
+# - column_type: Feature type (continuous, categorical, primary_key, group_index)
+# - column_position: Position/order of the column (0-based)
+# - column_size: Size of the column (usually 1 for single values)
+# 
+# Skeleton is used to define the dataset structure before data generation
+# The actual data will be filled during the generation process
 
 # Generate data without retraining
 results, metrics = job.infer()
@@ -358,7 +414,7 @@ pip install sdg-core-lib --no-cache-dir
 ```python
 # For large datasets, reduce batch size or use smaller n_rows
 job = Job(
-    n_rows=1000,  # Reduce if memory is limited
+    n_rows=1000000,  # Reduce if memory is limited
     model_info=model_config,
     dataset=dataset_config
 )
@@ -366,26 +422,52 @@ job = Job(
 
 #### 3. Model Training Fails
 ```python
-# Ensure your data format is correct
-def validate_data_format(data):
+# Validate Dataset format (column-based structure)
+def validate_dataset_format(dataset_config):
+    # Check dataset structure
+    if not isinstance(dataset_config, dict):
+        raise ValueError("Dataset config must be a dictionary")
+    
+    # Check required fields
+    if "data" not in dataset_config:
+        raise ValueError("Dataset config must contain 'data' field")
+    
+    data = dataset_config["data"]
     if not isinstance(data, list):
-        raise ValueError("Data must be a list of dictionaries")
+        raise ValueError("Data must be a list of column dictionaries")
+    
     if len(data) == 0:
-        raise ValueError("Data cannot be empty")
-    if not all(isinstance(row, dict) for row in data):
-        raise ValueError("Each row must be a dictionary")
+        raise ValueError("Data cannot be empty - at least one column required")
+    
+    # Validate each column
+    required_fields = ["column_name", "column_type", "column_datatype"]
+    for i, column in enumerate(data):
+        if not isinstance(column, dict):
+            raise ValueError(f"Column {i} must be a dictionary")
+        
+        for field in required_fields:
+            if field not in column:
+                raise ValueError(f"Column {i} missing required field: {field}")
+        
+        # Validate column data
+        if "column_data" not in column:
+            raise ValueError(f"Column '{column['column_name']}' missing 'column_data'")
+        
+        if not isinstance(column["column_data"], list):
+            raise ValueError(f"Column '{column['column_name']}' data must be a list")
+    
     return True
 
 # Validate before creating job
-validate_data_format(dataset_config["data"])
+validate_dataset_format(dataset_config)
 ```
 
 #### 4. Poor Quality Results
 ```python
 # Try different models or adjust hyperparameters
 models_to_try = [
-    "sdg_core_lib.data_generator.models.GANs.TabularGAN",
-    "sdg_core_lib.data_generator.models.VAEs.TabularVAE"
+    "sdg_core_lib.data_generator.models.GANs.implementation.CTGAN.CTGAN",
+    "sdg_core_lib.data_generator.models.VAEs.implementation.TabularVAE.TabularVAE"
 ]
 
 for model_name in models_to_try:

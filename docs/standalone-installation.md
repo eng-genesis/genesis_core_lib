@@ -37,7 +37,7 @@ pip install sdg-core-lib
 #### Installation with Specific Version
 ```bash
 # Install specific version
-pip install sdg-core-lib==0.1.8
+pip install sdg-core-lib==0.1.9
 
 # Install latest version
 pip install --upgrade sdg-core-lib
@@ -98,57 +98,6 @@ cd generator_core_lib
 uv sync --dev
 ```
 
-### Method 4: Container Installation
-
-#### Docker Installation
-```dockerfile
-# Dockerfile
-FROM python:3.12-slim
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install GENESIS Core Lib
-RUN pip install sdg-core-lib
-
-# Set working directory
-WORKDIR /app
-
-# Copy your application
-COPY . .
-
-# Run your application
-CMD ["python", "your_app.py"]
-```
-
-#### Docker Compose
-```yaml
-# docker-compose.yml
-version: '3.8'
-services:
-  genesis-app:
-    build: .
-    volumes:
-      - ./data:/app/data
-      - ./models:/app/models
-    environment:
-      - PYTHONPATH=/app
-    command: python your_app.py
-```
-
-#### Build and Run
-```bash
-# Build the image
-docker build -t genesis-core-lib .
-
-# Run the container
-docker run -v $(pwd)/data:/app/data genesis-core-lib
-
-# Use docker-compose
-docker-compose up --build
-```
 
 ## Environment Setup
 
@@ -191,30 +140,17 @@ conda deactivate
 
 #### Common Environment Variables
 ```bash
-# Set Python path
-export PYTHONPATH=$PYTHONPATH:/path/to/your/project
-
-# Set model cache directory
-export GENESIS_CACHE_DIR=/path/to/cache
-
-# Set log level
-export GENESIS_LOG_LEVEL=INFO
-
-# GPU settings (if using CUDA)
-export CUDA_VISIBLE_DEVICES=0
-export TF_FORCE_GPU_ALLOW_GROWTH=true
-```
-
-#### Hyperparameter Environment Variables
-```bash
-# Training hyperparameters
+# Training hyperparameters (optional)
 export EPOCHS=100
 export LEARNING_RATE=0.001
 export BATCH_SIZE=32
 
-# Model settings
-export MODEL_SAVE_PATH=./models
-export DATA_CACHE_PATH=./cache
+# Keras backend (automatically set to tensorflow)
+export KERAS_BACKEND=tensorflow
+
+# GPU settings (if using CUDA)
+export CUDA_VISIBLE_DEVICES=0
+export TF_FORCE_GPU_ALLOW_GROWTH=true
 ```
 
 ## Dependency Management
@@ -258,24 +194,6 @@ pip install tensorflow==2.18.0 --extra-index-url https://download.pytorch.org/wh
 python -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
 ```
 
-#### Development Tools
-```bash
-# Install development dependencies
-pip install pytest pytest-cov black flake8 mypy
-
-# Install pre-commit hooks
-pre-commit install
-```
-
-#### Jupyter Support
-```bash
-# Install Jupyter notebook support
-pip install jupyter ipywidgets matplotlib plotly
-
-# Start Jupyter
-jupyter notebook
-```
-
 ## Platform-Specific Installation
 
 ### Linux Installation
@@ -297,16 +215,13 @@ source genesis-env/bin/activate
 pip install sdg-core-lib
 ```
 
-#### CentOS/RHEL
+#### CentOS/RHEL/Fedora
 ```bash
-# Install EPEL repository
-sudo yum install epel-release
+# For modern systems (Fedora/CentOS Stream/RHEL 9+)
+sudo dnf install python3.12 python3.12-devel gcc gcc-c++ make hdf5-devel openssl-devel
 
-# Install Python and development tools
-sudo yum install python3.12 python3.12-devel gcc gcc-c++ make
-
-# Install HDF5 libraries
-sudo yum install hdf5-devel
+# For older systems (CentOS 7/RHEL 8)
+sudo yum install python3.12 python3.12-devel gcc gcc-c++ make hdf5-devel openssl-devel
 
 # Create virtual environment and install
 python3.12 -m venv genesis-env
@@ -332,8 +247,7 @@ pip install sdg-core-lib
 #### Using Conda
 ```bash
 # Install Miniconda (if not already installed)
-curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
-bash Miniconda3-latest-MacOSX-x86_64.sh
+# Visit https://docs.conda.io/en/latest/miniconda.html for latest download
 
 # Create environment and install
 conda create -n genesis-env python=3.12
@@ -354,6 +268,9 @@ wsl --install
 # Update and install Python
 sudo apt update
 sudo apt install python3.12 python3.12-venv python3.12-dev build-essential
+
+# Install system dependencies
+sudo apt install libhdf5-dev libhdf5-serial-dev libssl-dev libffi-dev
 
 # Create virtual environment and install
 python3.12 -m venv genesis-env
@@ -450,27 +367,40 @@ print("✅ Job creation successful!")
 ```python
 # Complete functionality test
 import numpy as np
-import pandas as pd
 from sdg_core_lib import Job
 
-# Test data
-test_data = pd.DataFrame({
-    'feature1': np.random.normal(0, 1, 100),
-    'feature2': np.random.exponential(1, 100),
-    'category': np.random.choice(['A', 'B', 'C'], 100)
-})
+# Test data in correct Dataset column-based format
+feature1_data = np.random.normal(0, 1, 100).tolist()
+feature2_data = np.random.exponential(1, 100).tolist()
+category_data = np.random.choice(['A', 'B', 'C'], 100).tolist()
 
-# Convert to required format
-data_payload = test_data.to_dict("records")
-
-# Configure job
+# Configure job with column-based Dataset format
 dataset_config = {
     "dataset_type": "table",
-    "data": data_payload
+    "data": [
+        {
+            "column_name": "feature1",
+            "column_type": "continuous",
+            "column_datatype": "float64",
+            "column_data": feature1_data
+        },
+        {
+            "column_name": "feature2", 
+            "column_type": "continuous",
+            "column_datatype": "float64",
+            "column_data": feature2_data
+        },
+        {
+            "column_name": "category",
+            "column_type": "categorical",
+            "column_datatype": "int64",
+            "column_data": category_data
+        }
+    ]
 }
 
 model_config = {
-    "algorithm_name": "sdg_core_lib.data_generator.models.GANs.TabularGAN",
+    "algorithm_name": "sdg_core_lib.data_generator.models.GANs.implementation.CTGAN.CTGAN",
     "model_name": "verification_model"
 }
 
@@ -613,7 +543,7 @@ keras==3.6.0
 loguru==0.7.3
 
 # GENESIS Core Lib
-sdg-core-lib==0.1.8
+sdg-core-lib==0.1.9
 ```
 
 ### pyproject.toml
@@ -622,43 +552,17 @@ sdg-core-lib==0.1.8
 name = "my-genesis-project"
 version = "0.1.0"
 dependencies = [
-    "sdg-core-lib>=0.1.8",
+    "sdg-core-lib>=0.1.9",
     "pandas>=2.2.3",
     "numpy>=2.0.2"
 ]
 
 [tool.uv]
 dev-dependencies = [
-    "pytest>=7.0.0",
-    "jupyter>=1.0.0"
+    "pytest>=7.0.0", 
 ]
 ```
 
-### Docker Compose for Production
-```yaml
-version: '3.8'
-services:
-  genesis-app:
-    image: genesis-core-lib:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - ./data:/app/data
-      - ./models:/app/models
-      - ./logs:/app/logs
-    environment:
-      - PYTHONPATH=/app
-      - GENESIS_LOG_LEVEL=INFO
-      - CUDA_VISIBLE_DEVICES=0
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
-```
 
 ## Best Practices
 

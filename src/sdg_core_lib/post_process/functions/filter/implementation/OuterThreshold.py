@@ -7,7 +7,7 @@ from sdg_core_lib.post_process.functions.filter.IntervalThreshold import (
 
 
 class OuterThreshold(IntervalThreshold):
-    description = "Filters data outside a given interval"
+    description = "Keeps data outside a given interval"
 
     def __init__(self, parameters: list[Parameter]):
         super().__init__(parameters)
@@ -25,6 +25,6 @@ class OuterThreshold(IntervalThreshold):
         else:
             lower_indexes = np.less(data, self.lower_bound)
         final_indexes = lower_indexes | upper_indexes
-
-        data[final_indexes] = np.nan
-        return data, final_indexes, True
+        removed_indexes = ~final_indexes
+        data[removed_indexes] = np.nan
+        return data, removed_indexes, True

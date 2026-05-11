@@ -11,9 +11,6 @@ This comprehensive user documentation covers all aspects of using GENESIS Core L
 3. [Model Types](#model-types)
 4. [Configuration](#configuration)
 5. [API Reference](#api-reference)
-6. [Examples and Use Cases](#examples-and-use-cases)
-7. [Best Practices](#best-practices)
-8. [Troubleshooting](#troubleshooting)
 
 ## Core Concepts
 
@@ -23,9 +20,15 @@ The `Job` class is the central orchestrator in GENESIS Core Lib. It manages the 
 
 #### Job Lifecycle
 
-```
-Data Input → Preprocessing → Model Training → Data Generation → Postprocessing → Evaluation
-```
+<img width="4273" height="1255" alt="image" src="https://github.com/user-attachments/assets/f9f63c87-c5d8-46a0-bcd9-094fd4f0f202" />
+
+
+- **Red**: training-specific flow
+- **Blue**: infer-only flow
+- **Purple**: training and infer shared flow
+- **Green**: function-generation flow
+- **Dashed**: optional steps
+
 
 #### Key Components
 
@@ -195,11 +198,21 @@ model_config = {
 }
 ```
 
-**Features:**
 - Stable training process
 - Interpretable latent space
 - Good for feature analysis
 - Handles missing values well
+
+##### AutoTabularVAE
+```python
+model_config = {
+    "algorithm_name": "sdg_core_lib.data_generator.models.VAEs.implementation.AutoTabularVAE.AutoTabularVAE",
+    "model_name": "auto_tabular_vae_model"
+}
+```
+- Longer Training Times (10x)
+- Same as Tabular VAE
+- Grid Searches Hyperparameters
 
 ##### TimeSeriesVAE
 ```python
@@ -209,7 +222,6 @@ model_config = {
 }
 ```
 
-**Features:**
 - Captures temporal dependencies
 - Handles variable-length sequences
 - Preserves temporal patterns
@@ -240,7 +252,6 @@ model_config = {
 }
 ```
 
-**Features:**
 - Handles mixed data types
 - Preserves feature correlations
 - Good for medium-sized datasets (1K-100K rows)
@@ -262,483 +273,30 @@ model_config = {
 | Any size | Very high dimensional | TabularVAE | More stable training |
 
 
+## Build a Job
+
+See [This](examples/user_example.py) as an example on how to use the library classes for generating data
+
+1. **Dataset Creation**: `Table.from_json()` creates a structured dataset from column definitions
+2. **Processor Setup**: `TableProcessor` with `VAEStrategy` handles data preprocessing
+3. **Metadata Extraction**: `preprocessed_data.to_skeleton()` extracts metadata for model
+4. **Model Instantiation and Training**: `TabularVAE()` creates the model with specific hyperparameters
+5. **Inference**: `model.infer()` generates new synthetic data
+6. **Post-processing**: Data is transformed back to original format with `postprocess()`
+7. **Evaluation**: `TabularComparisonEvaluator` assesses data quality
+8**Results**: Final data is available in JSON format for downstream use
+
+This approach gives you full control over each component while maintaining the same functionality as the configuration-based approach.
+
+
 ## API Reference
 
-### Job Class
+For detailed API documentation, see the following specialized reference files:
+
+- **[Job API Reference](./user-api-reference/job-API-reference.md)** - Core job management and orchestration
+- **[Dataset API Reference](./user-api-reference/dataset-API-reference.md)** - Data input/output and skeleton operations
+- **[Model API Reference](./user-api-reference/model-API-reference.md)** - Machine learning model interfaces
+- **[Functions API Reference](./user-api-reference/functions-API-reference.md)** - Mathematical functions for data generation
+- **[Processor API Reference](./user-api-reference/processor-API-reference.md)** - Data preprocessing and postprocessing
+- **[Evaluation API Reference](./user-api-reference/evaluation-API-reference.md)** - Quality evaluation and metrics 
 
-#### Constructor
-```python
-Job(
-    n_rows: int,
-    model_info: Optional[dict] = None,
-    dataset: Optional[dict] = None,
-    save_filepath: Optional[str] = None,
-    functions: Optional[list[dict]] = None
-)
-```
-
-**Parameters:**
-- `n_rows`: Number of synthetic rows to generate
-- `model_info`: Model configuration dictionary
-- `dataset`: Dataset configuration dictionary
-- `save_filepath`: Path to save trained models
-- `functions`: List of function configurations
-
-#### Methods
-
-##### train()
-```python
-train() -> tuple[list[dict], dict, UnspecializedModel, list[dict]]
-```
-Trains a model and generates synthetic data.
-
-**Returns:**
-- `results`: Generated synthetic data
-- `metrics`: Quality evaluation metrics
-- `model`: Trained model instance
-- `schema`: Data schema information
-
-##### infer()
-```python
-infer() -> tuple[list[dict], dict]
-```
-Generates data using a pre-trained model.
-
-**Returns:**
-- `results`: Generated synthetic data
-- `metrics`: Quality metrics (if real data available)
-
-##### generate_from_functions()
-```python
-generate_from_functions(dataset: Optional[Dataset] = None) -> list[dict]
-```
-Generates data using mathematical functions.
-
-**Parameters:**
-- `dataset`: Optional existing dataset to modify
-
-**Returns:**
-- `results`: Generated synthetic data
-
-### Utility Functions
-
-#### get_hyperparameters()
-```python
-get_hyperparameters() -> dict
-```
-Retrieves hyperparameters from environment variables.
-
-**Returns:**
-- Dictionary of hyperparameter settings
-
-### Data Classes
-
-#### Dataset
-Abstract base class for all data types.
-
-**Methods:**
-- `from_json()`: Load data from JSON format
-- `from_skeleton()`: Create from schema
-- `preprocess()`: Apply preprocessing
-- `postprocess()`: Apply postprocessing
-- `to_json()`: Convert to JSON
-- `to_skeleton()`: Extract schema
-
-#### UnspecializedModel
-Abstract base class for all models.
-
-**Methods:**
-- `train()`: Train the model
-- `infer()`: Generate synthetic data
-- `save()`: Save model to disk
-- `load()`: Load model from disk
-- `set_hyperparameters()`: Set model hyperparameters
-
-## Examples and Use Cases
-
-### Use Case 1: Customer Data Generation
-
-Generate synthetic customer data for testing while preserving privacy.
-
-```python
-from sdg_core_lib import Job
-import json
-
-# Load real customer data configuration
-with open("customers_config.json", "r") as f:
-    dataset_config = json.load(f)
-
-model_config = {
-    "algorithm_name": "sdg_core_lib.data_generator.models.VAEs.implementation.TabularVAE.TabularVAE",
-    "model_name": "customer_synthetic_generator"
-}
-
-# Generate synthetic customers
-job = Job(
-    n_rows=1000,  # Generate 1000 synthetic customers
-    model_info=model_config,
-    dataset=dataset_config,
-    save_filepath="./customer_models"
-)
-
-synthetic_customers, metrics, model, schema = job.train()
-
-# Evaluate quality
-print(f"Privacy Score: {metrics.get('privacy_score', 'N/A')}")
-print(f"Statistical Similarity: {metrics.get('statistical_similarity', 'N/A')}")
-
-# Save synthetic data
-with open("synthetic_customers.json", "w") as f:
-    json.dump(synthetic_customers, f)
-```
-
-
-
-### Use Case 2: Healthcare Data
-
-Generate synthetic patient data for research while maintaining HIPAA compliance.
-
-```python
-from sdg_core_lib import Job
-
-# Sample patient data (ensure no real PHI)
-patient_data = [
-    {
-        "age": 45,
-        "gender": "F",
-        "blood_pressure": 120,
-        "heart_rate": 72,
-        "cholesterol": 190,
-        "diabetes": 0,
-        "smoker": 0
-    },
-    # ... more patient records
-]
-
-# Configure generation with privacy focus
-dataset_config = {
-    "dataset_type": "table",
-    "data": patient_data
-}
-
-model_config = {
-    "algorithm_name": "sdg_core_lib.data_generator.models.VAEs.implementation.TabularVAE.TabularVAE",
-    "model_name": "patient_data_generator"
-}
-
-# Generate synthetic patient data
-job = Job(
-    n_rows=1000,
-    model_info=model_config,
-    dataset=dataset_config,
-    save_filepath="./healthcare_models"
-)
-
-synthetic_patients, metrics, model, schema = job.train()
-
-# Validate privacy preservation
-print(f"Privacy metrics: {metrics}")
-print(f"Generated {len(synthetic_patients)} synthetic patient records")
-```
-
-### Use Case 3: Function-Based Data Generation
-
-Generate controlled datasets for specific testing scenarios.
-
-```python
-from sdg_core_lib import Job
-
-# Define mathematical relationships
-functions = [
-    {
-        "feature": "experience_years",
-        "function_name": "LinearFunction",
-        "parameters": {
-            "m": 1.0,
-            "q": 0.0,
-            "min_value": 0.0,
-            "max_value": 20.0
-        }
-    },
-    {
-        "feature": "salary",
-        "function_name": "QuadraticFunction",
-        "parameters": {
-            "a": 500.0,
-            "b": 2000.0,
-            "c": 30000.0,
-            "min_value": 0.0,
-            "max_value": 20.0
-        }
-    },
-    {
-        "feature": "performance_score",
-        "function_name": "SinusoidalFunction",
-        "parameters": {
-            "amplitude": 20.0,
-            "frequency": 0.5,
-            "phase": 0.0,
-            "min_value": 0.0,
-            "max_value": 20.0
-        }
-    }
-]
-
-# Generate controlled dataset
-job = Job(n_rows=100, functions=functions)
-
-synthetic_data = job.generate_from_functions()
-
-# Analyze relationships
-print("Generated dataset:")
-print(f"First few rows: {synthetic_data[:5]}")
-```
-
-### Use Case 4: Model Comparison
-
-Compare different models to find the best for your data.
-
-```python
-from sdg_core_lib import Job
-import json
-
-# Load sample data configuration
-with open('sample_data_config.json', 'r') as f:
-    dataset_config = json.load(f)
-
-# Test different models
-models = [
-    {
-        "name": "TabularVAE",
-        "config": {
-            "algorithm_name": "sdg_core_lib.data_generator.models.VAEs.implementation.TabularVAE.TabularVAE",
-            "model_name": "vae_model"
-        }
-    },
-    {
-        "name": "CTGAN",
-        "config": {
-            "algorithm_name": "sdg_core_lib.data_generator.models.GANs.implementation.CTGAN.CTGAN",
-            "model_name": "ctgan_model"
-        }
-    }
-]
-
-results_comparison = {}
-
-for model in models:
-    job = Job(
-        n_rows=200,
-        model_info=model["config"],
-        dataset=dataset_config,
-        save_filepath=f"./{model['name'].lower()}_models"
-    )
-    
-    synthetic_data, metrics, trained_model, schema = job.train()
-    
-    results_comparison[model["name"]] = {
-        "statistical_similarity": metrics.get("statistical_similarity", 0),
-        "correlation_preservation": metrics.get("correlation_preservation", 0),
-        "privacy_score": metrics.get("privacy_score", 0)
-    }
-
-# Compare results
-print("Model Comparison:")
-for model_name, metrics in results_comparison.items():
-    print(f"\n{model_name}:")
-    for metric, value in metrics.items():
-        if isinstance(value, (int, float)):
-            print(f"  {metric}: {value:.3f}")
-        else:
-            print(f"  {metric}: {value}")
-
-# Find best model
-best_model = max(results_comparison.keys(), 
-                key=lambda x: results_comparison[x].get("statistical_similarity", 0))
-print(f"\nBest model: {best_model}")
-```
-
-## Best Practices
-
-### Data Preparation
-
-#### 1. Data Quality
-- Remove duplicates and outliers
-- Handle missing values consistently
-- Ensure consistent data types
-- Validate data integrity
-
-#### 2. Feature Engineering
-- Normalize numeric features
-- Encode categorical variables appropriately
-- Create meaningful derived features
-- Reduce high cardinality categories
-
-#### 3. Data Size
-- Minimum 1000 rows for model training
-- More data generally improves quality
-- Consider data augmentation for small datasets
-- Balance class distribution
-
-### Model Selection
-
-#### 1. Start Simple
-- Begin with TabularVAE for stability
-- Progress to CTGAN for complexity
-- Compare multiple models
-- Use cross-validation when possible
-
-#### 2. Hyperparameter Tuning
-- Start with default hyperparameters
-- Adjust learning rate if training fails
-- Monitor training convergence
-- Use early stopping to prevent overfitting
-
-#### 3. Model Evaluation
-- Use multiple quality metrics
-- Consider downstream task performance
-- Validate privacy preservation
-- Perform visual inspection
-
-### Performance Optimization
-
-#### 1. Hardware Optimization
-- Use GPU when available
-- Enable mixed precision training
-- Optimize batch size for memory
-- Use parallel processing
-
-#### 2. Software Optimization
-- Use appropriate data types
-- Optimize memory usage
-- Cache preprocessed data
-- Use efficient data structures
-
-#### 3. Pipeline Optimization
-- Stream large datasets
-- Use incremental processing
-- Optimize I/O operations
-- Monitor resource usage
-
-### Privacy Considerations
-
-#### 1. Data Anonymization
-- Remove direct identifiers
-- Apply differential privacy
-- Use aggregation techniques
-- Validate privacy metrics
-
-#### 2. Risk Assessment
-- Evaluate re-identification risk
-- Consider attack scenarios
-- Implement access controls
-- Document privacy measures
-
-#### 3. Compliance
-- Follow GDPR guidelines
-- Meet industry regulations
-- Document data usage
-- Implement audit trails
-
-## Troubleshooting
-
-### Common Issues
-
-#### 1. Installation Problems
-**Problem**: Import errors or missing dependencies
-**Solution**: 
-```bash
-# Reinstall with specific versions
-pip uninstall sdg-core-lib
-pip install sdg-core-lib==0.1.8
-
-# Check Python version
-python --version  # Should be 3.12+
-```
-
-#### 2. Memory Errors
-**Problem**: Out of memory during training
-**Solution**:
-```python
-# Reduce batch size
-import os
-os.environ["BATCH_SIZE"] = "16"
-
-# Enable memory growth for GPU
-import tensorflow as tf
-gpus = tf.config.experimental.list_physical_devices('GPU')
-if gpus:
-    tf.config.experimental.set_memory_growth(gpus[0], True)
-```
-
-#### 3. Poor Quality Results
-**Problem**: Generated data doesn't match real data
-**Solution**:
-- Increase training epochs
-- Try different model architectures
-- Improve data preprocessing
-- Use larger training dataset
-
-#### 4. Training Instability
-**Problem**: Model training fails or produces errors
-**Solution**:
-```python
-# Adjust learning rate
-os.environ["LEARNING_RATE"] = "0.0001"
-
-```
-
-#### 5. Slow Performance
-**Problem**: Training takes too long
-**Solution**:
-- Enable GPU acceleration
-- Increase batch size
-- Use data parallelism
-- Optimize data loading
-
-### Debugging Techniques
-
-#### 1. Logging
-```python
-import logging
-logging.basicConfig(level=logging.INFO)
-
-# Enable detailed logging
-os.environ["GENESIS_LOG_LEVEL"] = "DEBUG"
-```
-
-#### 2. Data Validation
-```python
-# Validate input data
-def validate_data(data):
-    assert isinstance(data, list), "Data must be a list"
-    assert len(data) > 0, "Data cannot be empty"
-    assert all(isinstance(row, dict) for row in data), "Rows must be dictionaries"
-    return True
-
-validate_data(dataset_config["data"])
-```
-
-#### 3. Model Inspection
-```python
-# Inspect model architecture
-model = job._model_factory()
-print(f"Model input shape: {model.input_shape}")
-print(f"Model parameters: {model.count_params()}")
-```
-
-#### 4. Quality Metrics
-```python
-# Detailed quality analysis
-def analyze_quality(real_data, synthetic_data, metrics):
-    print("Quality Analysis:")
-    for metric, value in metrics.items():
-        print(f"  {metric}: {value:.3f}")
-    
-    # Visual comparison
-    # Add visualization code here
-```
-
-
-
-This comprehensive user documentation provides everything you need to effectively use GENESIS Core Lib for synthetic data generation across various use cases and scenarios.

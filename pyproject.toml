@@ -1,7 +1,7 @@
 [project]
 name = "sdg-core-lib"
-version = "0.1.8"
-description = "Add your description here"
+version = "0.1.9"
+description = "Advanced synthetic data generation library"
 license = "AGPL-3.0"
 readme = "README.md"
 authors = [
@@ -43,11 +43,33 @@ dev = [
 
 test = [
     {include-group = "dev"},
-    "pytest"
+    "pytest",
+    "pytest-cov",
+    "coverage[toml]"
 ]
 
 [project.scripts]
-sdg-core-lib = "sdg_core_lib:main"
+sdg-core-lib = "genesis_core_lib:main"
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "*/test/*",
+    "*/__pycache__/*",
+    "*/tests/*"
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError"
+]
+fail_under = 80
+
+[tool.coverage.html]
+directory = "htmlcov"
 
 [build-system]
 requires = ["uv_build>=0.8.22,<0.9.0"]

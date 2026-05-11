@@ -5,7 +5,12 @@ from loguru import logger
 from typing import Optional
 
 
-class FunctionApplier:
+class TabularFunctionApplier:
+    """
+    A class to apply functions to datasets.
+    WARNING: this class is under construction. New dataset types will be supported in the future.
+    """
+
     def __init__(
         self, function_feature_dict: list[dict], n_rows: int, from_scratch: bool = False
     ):
@@ -16,17 +21,36 @@ class FunctionApplier:
 
     def _initialize(self):
         feature_function_mapping = {}
+        logger.info(
+            f"Initializing with function_feature_dict: {self.function_feature_dict}"
+        )
+
         for item in self.function_feature_dict:
             feature = item["feature"]
+            logger.debug(f"Processing function for feature: {feature}")
+
             if feature not in feature_function_mapping.keys():
                 feature_function_mapping[feature] = []
 
-            feature_function_mapping[feature].append(function_factory(item))
+            try:
+                function_instance = function_factory(item)
+                logger.debug(
+                    f"Successfully created function: {function_instance.__class__.__name__}"
+                )
+                feature_function_mapping[feature].append(function_instance)
+            except Exception as e:
+                logger.error(f"Failed to create function for feature {feature}: {e}")
+                logger.error(f"Function item: {item}")
+                raise
 
         for feature, functions in feature_function_mapping.items():
             functions.sort(key=lambda x: x.priority.value, reverse=True)
+            logger.debug(f"Sorted {len(functions)} functions for feature {feature}")
 
         self.function_feature_mapping = feature_function_mapping
+        logger.info(
+            f"Final function mapping: {list(self.function_feature_mapping.keys())}"
+        )
 
     def apply_all(self, dataset: Optional[Dataset] = None) -> Dataset:
         """
@@ -126,7 +150,9 @@ class FunctionApplier:
         Raises:
             ValueError: If data compatibility issues arise
         """
-        if not isinstance(dataset, Table):
+        if type(dataset) is not Table:
+            # TODO: support other dataset types
+            logger.error("Only Table datasets are currently supported")
             raise TypeError("Only Table datasets are currently supported")
 
         json_structure = dataset.to_json()
@@ -134,14 +160,32 @@ class FunctionApplier:
         data_array = []
         unmapped_features = []
 
+        logger.info(
+            f"Available features in dataset: {[f['column_name'] for f in json_structure]}"
+        )
+        logger.info(f"Function mapping: {list(self.function_feature_mapping.keys())}")
+
         for feature in json_structure:
             feature_name = feature["column_name"]
+            logger.debug(f"Processing feature: {feature_name}")
 
             if feature_name in self.function_feature_mapping:
+                logger.info(f"Found functions for feature: {feature_name}")
                 functions = self.function_feature_mapping[feature_name]
-                self._validate_function_sequence(functions, from_scratch=False)
+                logger.debug(
+                    f"Functions to apply: {[f.__class__.__name__ for f in functions]}"
+                )
+
+                try:
+                    self._validate_function_sequence(functions, from_scratch=False)
+                except Exception as e:
+                    logger.error(f"Validation failed for {feature_name}: {e}")
+                    raise
 
                 feature_data = np.array(feature["column_data"])
+                logger.debug(
+                    f"Original data shape: {feature_data.shape}, dtype: {feature_data.dtype}"
+                )
                 original_shape = feature_data.shape
 
                 for function in functions:
@@ -152,8 +196,14 @@ class FunctionApplier:
                         continue
 
                     try:
+                        logger.debug(
+                            f"Applying {function.__class__.__name__} to {feature_name}"
+                        )
                         feature_data, indexes, success = function.apply(
                             n_rows=self.n_rows, data=feature_data
+                        )
+                        logger.debug(
+                            f"Function result: success={success}, indexes_sum={indexes.sum()}"
                         )
                         if not success:
                             logger.warning(
@@ -175,6 +225,7 @@ class FunctionApplier:
                 modified_features.add(feature_name)
             else:
                 # Preserve unmapped features
+                logger.debug(f"No function mapping for feature: {feature_name}")
                 data_array.append(np.array(feature["column_data"]))
                 unmapped_features.append(feature_name)
 

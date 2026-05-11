@@ -1,8 +1,9 @@
 from typing import Optional, Type
+from loguru import logger
 
 from sdg_core_lib.data_generator.models.UnspecializedModel import UnspecializedModel
 from sdg_core_lib.dataset.datasets import Dataset
-from sdg_core_lib.post_process.FunctionApplier import FunctionApplier
+from sdg_core_lib.post_process.TabularFunctionApplier import TabularFunctionApplier
 from sdg_core_lib.preprocess.base_processor import Processor
 from sdg_core_lib.mappings import (
     DatasetMapping,
@@ -36,7 +37,7 @@ class Job:
         self.__dataset = dataset if dataset is not None else {}
         self.__n_rows = n_rows
         self.__save_filepath = save_filepath
-        self.__functions = functions
+        self.__functions = functions if functions is not None else []
         dataset_type = self.__dataset.get("dataset_type", "")
         self.__dataset_mapping = self._get_dataset_mapping(dataset_type)
         self.__dataset_class = self.__dataset_mapping.get_dataset_class()
@@ -92,6 +93,37 @@ class Job:
 
         return processor
 
+    def _infer_and_evaluate(
+        self,
+        data: Dataset,
+        preprocessed_data: Dataset,
+        processor: Processor,
+        model: UnspecializedModel,
+    ) -> tuple[dict, list[dict]]:
+
+        predicted_data = model.infer(self.__n_rows)
+        synthetic_data = preprocessed_data.clone(predicted_data)
+        synthetic_data = synthetic_data.postprocess(processor)
+        function_generator = TabularFunctionApplier(
+            self.__functions, self.__n_rows, from_scratch=False
+        )
+        try:
+            filtered_synthetic_data = function_generator.apply_all(synthetic_data)
+        except (TypeError, ValueError) as e:
+            logger.error(f"Unable to apply functions to data: {e}")
+            filtered_synthetic_data = synthetic_data
+
+        report = {"available": "false"}
+        if data is not None:
+            evaluator = self.__evaluator_class(
+                real_data=data,
+                synthetic_data=synthetic_data,
+            )
+            report = evaluator.compute()
+
+        results = filtered_synthetic_data.to_json()
+        return report, results
+
     def train(self) -> tuple[list[dict], dict, UnspecializedModel, list[dict]]:
         """
         Runs a pre-defined training job.
@@ -117,16 +149,9 @@ class Job:
         model.train(data=preprocessed_data.get_computing_data())
         model.save(self.__save_filepath)
 
-        predicted_data = model.infer(self.__n_rows)
-        synthetic_data = preprocessed_data.clone(predicted_data)
-        synthetic_data = synthetic_data.postprocess(processor)
-
-        evaluator = self.__evaluator_class(
-            real_data=data,
-            synthetic_data=synthetic_data,
+        report, results = self._infer_and_evaluate(
+            data, preprocessed_data, processor, model
         )
-        report = evaluator.compute()
-        results = synthetic_data.to_json()
 
         return results, report, model, preprocess_schema
 
@@ -143,33 +168,22 @@ class Job:
             preprocessed_data = data.preprocess(processor)
 
         model = self._model_factory(preprocessed_data, is_new_model=False)
-        predicted_data = model.infer(self.__n_rows)
-        synthetic_data = preprocessed_data.clone(predicted_data)
-        synthetic_data = synthetic_data.postprocess(processor)
-
-        report = {"available": "false"}
-        if data is not None:
-            evaluator = self.__evaluator_class(
-                real_data=data,
-                synthetic_data=synthetic_data,
-            )
-            report = evaluator.compute()
-
-        results = synthetic_data.to_json()
+        report, results = self._infer_and_evaluate(
+            data, preprocessed_data, processor, model
+        )
 
         return results, report
 
     def generate_from_functions(self, dataset: Optional[Dataset] = None):
         """
         Generate a dataset from a list of functions.
-        :param n_rows: number of rows to generate
         :param dataset: a Dataset object
-        :return: a dataset in json format
+        :return: a dataset in JSON format
         """
         from_scratch = False
         if dataset is None:
             from_scratch = True
-        function_generator = FunctionApplier(
+        function_generator = TabularFunctionApplier(
             self.__functions, self.__n_rows, from_scratch=from_scratch
         )
         dataset = function_generator.apply_all(dataset)
