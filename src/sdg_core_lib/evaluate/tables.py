@@ -188,9 +188,7 @@ class TabularComparisonEvaluator(BaseEvaluator):
         for real_cat, synth_cat in zip(categorical_columns, synth_categorical_columns):
             real_data = real_cat.get_data()
             synth_data = synth_cat.get_data()
-            extra_values = np.array(
-                set(np.unique(synth_data)) - set(np.unique(real_data))
-            )
+            extra_values = np.array(list(set(np.unique(synth_data)) - set(np.unique(real_data))))
             # Count how many synthetic records use these extra values.
             extra_count = np.sum(np.isin(synth_data, extra_values))
             # Define adherence as the percentage of records that do NOT have extra values.

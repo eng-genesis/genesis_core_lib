@@ -1,6 +1,6 @@
 [project]
 name = "sdg-core-lib"
-version = "0.1.9"
+version = "0.1.10"
 description = "Advanced synthetic data generation library"
 license = "AGPL-3.0"
 readme = "README.md"
