@@ -173,7 +173,7 @@
       "version": "3.1.8"
     },
     {
-      "bom-ref": "absl-py==2.4.0",
+      "bom-ref": "absl-py==2.5.0",
       "description": "Abseil Python Common Libraries, see https://github.com/abseil/abseil-py.",
       "externalReferences": [
         {
@@ -206,9 +206,9 @@
         }
       ],
       "name": "absl-py",
-      "purl": "pkg:pypi/absl-py@2.4.0",
+      "purl": "pkg:pypi/absl-py@2.5.0",
       "type": "library",
-      "version": "2.4.0"
+      "version": "2.5.0"
     },
     {
       "bom-ref": "annotated-types==0.7.0",
@@ -366,7 +366,7 @@
       "version": "5.0"
     },
     {
-      "bom-ref": "certifi==2026.5.20",
+      "bom-ref": "certifi==2026.6.17",
       "description": "Python package for providing Mozilla's CA Bundle.",
       "externalReferences": [
         {
@@ -395,9 +395,9 @@
         }
       ],
       "name": "certifi",
-      "purl": "pkg:pypi/certifi@2026.5.20",
+      "purl": "pkg:pypi/certifi@2026.6.17",
       "type": "library",
-      "version": "2026.5.20"
+      "version": "2026.6.17"
     },
     {
       "bom-ref": "chardet==5.2.0",
@@ -438,7 +438,7 @@
       "version": "5.2.0"
     },
     {
-      "bom-ref": "charset-normalizer==3.4.7",
+      "bom-ref": "charset-normalizer==3.4.9",
       "description": "The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet.",
       "externalReferences": [
         {
@@ -471,9 +471,9 @@
         }
       ],
       "name": "charset-normalizer",
-      "purl": "pkg:pypi/charset-normalizer@3.4.7",
+      "purl": "pkg:pypi/charset-normalizer@3.4.9",
       "type": "library",
-      "version": "3.4.7"
+      "version": "3.4.9"
     },
     {
       "bom-ref": "contourpy==1.3.3",
@@ -596,7 +596,7 @@
       "version": "7.3.0"
     },
     {
-      "bom-ref": "cyclonedx-python-lib==11.7.0",
+      "bom-ref": "cyclonedx-python-lib==11.11.0",
       "description": "Python library for CycloneDX",
       "externalReferences": [
         {
@@ -651,9 +651,9 @@
           "value": "validation"
         }
       ],
-      "purl": "pkg:pypi/cyclonedx-python-lib@11.7.0",
+      "purl": "pkg:pypi/cyclonedx-python-lib@11.11.0",
       "type": "library",
-      "version": "11.7.0"
+      "version": "11.11.0"
     },
     {
       "bom-ref": "defusedxml==0.7.1",
@@ -809,7 +809,7 @@
       "version": "0.2.0"
     },
     {
-      "bom-ref": "grpcio==1.80.0",
+      "bom-ref": "grpcio==1.82.1",
       "description": "HTTP/2-based RPC framework",
       "externalReferences": [
         {
@@ -842,9 +842,9 @@
         }
       ],
       "name": "grpcio",
-      "purl": "pkg:pypi/grpcio@1.80.0",
+      "purl": "pkg:pypi/grpcio@1.82.1",
       "type": "library",
-      "version": "1.80.0"
+      "version": "1.82.1"
     },
     {
       "bom-ref": "h5py==3.16.0",
@@ -890,7 +890,7 @@
       "version": "3.16.0"
     },
     {
-      "bom-ref": "idna==3.16",
+      "bom-ref": "idna==3.18",
       "description": "Internationalized Domain Names in Applications (IDNA)",
       "externalReferences": [
         {
@@ -918,9 +918,9 @@
         }
       ],
       "name": "idna",
-      "purl": "pkg:pypi/idna@3.16",
+      "purl": "pkg:pypi/idna@3.18",
       "type": "library",
-      "version": "3.16"
+      "version": "3.18"
     },
     {
       "bom-ref": "isoduration==20.11.0",
@@ -1291,7 +1291,7 @@
       "version": "30.4.4"
     },
     {
-      "bom-ref": "llvmlite==0.47.0",
+      "bom-ref": "llvmlite==0.48.0",
       "description": "lightweight wrapper around basic LLVM functionality",
       "externalReferences": [
         {
@@ -1312,9 +1312,9 @@
         }
       ],
       "name": "llvmlite",
-      "purl": "pkg:pypi/llvmlite@0.47.0",
+      "purl": "pkg:pypi/llvmlite@0.48.0",
       "type": "library",
-      "version": "0.47.0"
+      "version": "0.48.0"
     },
     {
       "bom-ref": "loguru==0.7.3",
@@ -1411,7 +1411,7 @@
       "version": "4.2.0"
     },
     {
-      "bom-ref": "matplotlib==3.10.9",
+      "bom-ref": "matplotlib==3.11.1",
       "description": "Python plotting package",
       "externalReferences": [
         {
@@ -1459,9 +1459,9 @@
         }
       ],
       "name": "matplotlib",
-      "purl": "pkg:pypi/matplotlib@3.10.9",
+      "purl": "pkg:pypi/matplotlib@3.11.1",
       "type": "library",
-      "version": "3.10.9"
+      "version": "3.11.1"
     },
     {
       "bom-ref": "mdurl==0.1.2",
@@ -1522,7 +1522,7 @@
       "version": "0.1.0"
     },
     {
-      "bom-ref": "numba==0.65.1",
+      "bom-ref": "numba==0.66.0",
       "description": "compiling Python code using LLVM",
       "externalReferences": [
         {
@@ -1540,9 +1540,9 @@
         }
       ],
       "name": "numba",
-      "purl": "pkg:pypi/numba@0.65.1",
+      "purl": "pkg:pypi/numba@0.66.0",
       "type": "library",
-      "version": "0.65.1"
+      "version": "0.66.0"
     },
     {
       "bom-ref": "numpy==2.0.2",
@@ -1762,7 +1762,7 @@
       "version": "1.0.2"
     },
     {
-      "bom-ref": "pillow==12.2.0",
+      "bom-ref": "pillow==12.3.0",
       "description": "Python Imaging Library (fork)",
       "externalReferences": [
         {
@@ -1810,9 +1810,9 @@
         }
       ],
       "name": "pillow",
-      "purl": "pkg:pypi/pillow@12.2.0",
+      "purl": "pkg:pypi/pillow@12.3.0",
       "type": "library",
-      "version": "12.2.0"
+      "version": "12.3.0"
     },
     {
       "bom-ref": "pip-requirements-parser==32.0.1",
@@ -1838,7 +1838,7 @@
       "version": "32.0.1"
     },
     {
-      "bom-ref": "prettytable==3.17.0",
+      "bom-ref": "prettytable==3.18.0",
       "description": "A simple Python library for easily displaying tabular data in a visually appealing ASCII table format",
       "externalReferences": [
         {
@@ -1871,9 +1871,9 @@
         }
       ],
       "name": "prettytable",
-      "purl": "pkg:pypi/prettytable@3.17.0",
+      "purl": "pkg:pypi/prettytable@3.18.0",
       "type": "library",
-      "version": "3.17.0"
+      "version": "3.18.0"
     },
     {
       "bom-ref": "protobuf==5.29.6",
@@ -2314,7 +2314,7 @@
       "version": "15.0.0"
     },
     {
-      "bom-ref": "rpds-py==0.30.0",
+      "bom-ref": "rpds-py==2026.6.3",
       "description": "Python bindings to Rust's persistent data structures (rpds)",
       "externalReferences": [
         {
@@ -2362,9 +2362,9 @@
         }
       ],
       "name": "rpds-py",
-      "purl": "pkg:pypi/rpds-py@0.30.0",
+      "purl": "pkg:pypi/rpds-py@2026.6.3",
       "type": "library",
-      "version": "0.30.0"
+      "version": "2026.6.3"
     },
     {
       "bom-ref": "scikit-learn==1.5.2",
@@ -2415,7 +2415,7 @@
       "version": "1.5.2"
     },
     {
-      "bom-ref": "scipy==1.17.1",
+      "bom-ref": "scipy==1.18.0",
       "description": "Fundamental algorithms for scientific computing in Python",
       "externalReferences": [
         {
@@ -2453,9 +2453,9 @@
         }
       ],
       "name": "scipy",
-      "purl": "pkg:pypi/scipy@1.17.1",
+      "purl": "pkg:pypi/scipy@1.18.0",
       "type": "library",
-      "version": "1.17.1"
+      "version": "1.18.0"
     },
     {
       "bom-ref": "sdg-core-lib==0.1.9",
@@ -2508,7 +2508,7 @@
       "version": "0.13.2"
     },
     {
-      "bom-ref": "setuptools==82.0.1",
+      "bom-ref": "setuptools==83.0.0",
       "description": "Most extensible Python build backend with support for C/C++ extension modules",
       "externalReferences": [
         {
@@ -2536,9 +2536,9 @@
         }
       ],
       "name": "setuptools",
-      "purl": "pkg:pypi/setuptools@82.0.1",
+      "purl": "pkg:pypi/setuptools@83.0.0",
       "type": "library",
-      "version": "82.0.1"
+      "version": "83.0.0"
     },
     {
       "bom-ref": "six==1.17.0",
@@ -2885,7 +2885,7 @@
       "version": "0.4.2"
     },
     {
-      "bom-ref": "typing_extensions==4.15.0",
+      "bom-ref": "typing_extensions==4.16.0",
       "description": "Backported and Experimental Type Hints for Python 3.9+",
       "externalReferences": [
         {
@@ -2928,12 +2928,12 @@
         }
       ],
       "name": "typing_extensions",
-      "purl": "pkg:pypi/typing-extensions@4.15.0",
+      "purl": "pkg:pypi/typing-extensions@4.16.0",
       "type": "library",
-      "version": "4.15.0"
+      "version": "4.16.0"
     },
     {
-      "bom-ref": "tzdata==2026.2",
+      "bom-ref": "tzdata==2026.3",
       "description": "Provider of IANA time zone data",
       "externalReferences": [
         {
@@ -2966,9 +2966,9 @@
         }
       ],
       "name": "tzdata",
-      "purl": "pkg:pypi/tzdata@2026.2",
+      "purl": "pkg:pypi/tzdata@2026.3",
       "type": "library",
-      "version": "2026.2"
+      "version": "2026.3"
     },
     {
       "bom-ref": "uri-template==1.3.0",
@@ -3032,7 +3032,7 @@
       "version": "2.7.0"
     },
     {
-      "bom-ref": "wcwidth==0.7.0",
+      "bom-ref": "wcwidth==0.8.2",
       "description": "Measures the displayed width of unicode strings in a terminal",
       "externalReferences": [
         {
@@ -3050,9 +3050,9 @@
         }
       ],
       "name": "wcwidth",
-      "purl": "pkg:pypi/wcwidth@0.7.0",
+      "purl": "pkg:pypi/wcwidth@0.8.2",
       "type": "library",
-      "version": "0.7.0"
+      "version": "0.8.2"
     },
     {
       "bom-ref": "webcolors==25.10.0",
@@ -3127,7 +3127,7 @@
       "version": "0.47.0"
     },
     {
-      "bom-ref": "wrapt==2.2.1",
+      "bom-ref": "wrapt==2.2.2",
       "description": "Module for decorators, wrappers and monkey patching.",
       "externalReferences": [
         {
@@ -3160,9 +3160,9 @@
         }
       ],
       "name": "wrapt",
-      "purl": "pkg:pypi/wrapt@2.2.1",
+      "purl": "pkg:pypi/wrapt@2.2.2",
       "type": "library",
-      "version": "2.2.1"
+      "version": "2.2.2"
     }
   ],
   "dependencies": [
@@ -3182,11 +3182,11 @@
       "ref": "Werkzeug==3.1.8"
     },
     {
-      "ref": "absl-py==2.4.0"
+      "ref": "absl-py==2.5.0"
     },
     {
       "dependsOn": [
-        "typing_extensions==4.15.0"
+        "typing_extensions==4.16.0"
       ],
       "ref": "annotated-types==0.7.0"
     },
@@ -3194,7 +3194,7 @@
       "dependsOn": [
         "python-dateutil==2.9.0.post0",
         "pytz==2026.2",
-        "tzdata==2026.2"
+        "tzdata==2026.3"
       ],
       "ref": "arrow==1.4.0"
     },
@@ -3212,32 +3212,32 @@
       "ref": "boolean.py==5.0"
     },
     {
-      "ref": "certifi==2026.5.20"
+      "ref": "certifi==2026.6.17"
     },
     {
       "ref": "chardet==5.2.0"
     },
     {
-      "ref": "charset-normalizer==3.4.7"
+      "ref": "charset-normalizer==3.4.9"
     },
     {
       "dependsOn": [
-        "matplotlib==3.10.9",
+        "matplotlib==3.11.1",
         "numpy==2.0.2",
-        "pillow==12.2.0"
+        "pillow==12.3.0"
       ],
       "ref": "contourpy==1.3.3"
     },
     {
       "dependsOn": [
-        "matplotlib==3.10.9"
+        "matplotlib==3.11.1"
       ],
       "ref": "cycler==0.12.1"
     },
     {
       "dependsOn": [
         "chardet==5.2.0",
-        "cyclonedx-python-lib==11.7.0",
+        "cyclonedx-python-lib==11.11.0",
         "packageurl-python==0.17.6",
         "packaging==26.2",
         "pip-requirements-parser==32.0.1"
@@ -3253,9 +3253,9 @@
         "py-serializable==2.1.0",
         "referencing==0.37.0",
         "sortedcontainers==2.4.0",
-        "typing_extensions==4.15.0"
+        "typing_extensions==4.16.0"
       ],
-      "ref": "cyclonedx-python-lib==11.7.0"
+      "ref": "cyclonedx-python-lib==11.11.0"
     },
     {
       "ref": "defusedxml==0.7.1"
@@ -3266,8 +3266,8 @@
     {
       "dependsOn": [
         "lxml==6.1.1",
-        "matplotlib==3.10.9",
-        "scipy==1.17.1"
+        "matplotlib==3.11.1",
+        "scipy==1.18.0"
       ],
       "ref": "fonttools==4.63.0"
     },
@@ -3285,9 +3285,9 @@
     },
     {
       "dependsOn": [
-        "typing_extensions==4.15.0"
+        "typing_extensions==4.16.0"
       ],
-      "ref": "grpcio==1.80.0"
+      "ref": "grpcio==1.82.1"
     },
     {
       "dependsOn": [
@@ -3296,7 +3296,7 @@
       "ref": "h5py==3.16.0"
     },
     {
-      "ref": "idna==3.16"
+      "ref": "idna==3.18"
     },
     {
       "dependsOn": [
@@ -3320,7 +3320,7 @@
       "dependsOn": [
         "attrs==26.1.0",
         "fqdn==1.5.1",
-        "idna==3.16",
+        "idna==3.18",
         "isoduration==20.11.0",
         "jsonpointer==3.1.1",
         "jsonschema-specifications==2025.9.1",
@@ -3328,7 +3328,7 @@
         "rfc3339-validator==0.1.4",
         "rfc3986-validator==0.1.1",
         "rfc3987-syntax==1.1.0",
-        "rpds-py==0.30.0",
+        "rpds-py==2026.6.3",
         "uri-template==1.3.0",
         "webcolors==25.10.0"
       ],
@@ -3336,7 +3336,7 @@
     },
     {
       "dependsOn": [
-        "grpcio==1.80.0",
+        "grpcio==1.82.1",
         "keras==3.6.0",
         "kt-legacy==1.0.5",
         "namex==0.1.0",
@@ -3345,14 +3345,14 @@
         "protobuf==5.29.6",
         "requests==2.34.2",
         "scikit-learn==1.5.2",
-        "scipy==1.17.1",
+        "scipy==1.18.0",
         "tensorflow==2.18.0"
       ],
       "ref": "keras-tuner==1.4.8"
     },
     {
       "dependsOn": [
-        "absl-py==2.4.0",
+        "absl-py==2.5.0",
         "h5py==3.16.0",
         "ml-dtypes==0.4.1",
         "namex==0.1.0",
@@ -3382,7 +3382,7 @@
       "ref": "license-expression==30.4.4"
     },
     {
-      "ref": "llvmlite==0.47.0"
+      "ref": "llvmlite==0.48.0"
     },
     {
       "ref": "loguru==0.7.3"
@@ -3406,19 +3406,18 @@
         "kiwisolver==1.5.0",
         "numpy==2.0.2",
         "packaging==26.2",
-        "pillow==12.2.0",
+        "pillow==12.3.0",
         "pyparsing==3.3.2",
-        "python-dateutil==2.9.0.post0",
-        "setuptools==82.0.1"
+        "python-dateutil==2.9.0.post0"
       ],
-      "ref": "matplotlib==3.10.9"
+      "ref": "matplotlib==3.11.1"
     },
     {
       "ref": "mdurl==0.1.2"
     },
     {
       "dependsOn": [
-        "absl-py==2.4.0",
+        "absl-py==2.5.0",
         "numpy==2.0.2"
       ],
       "ref": "ml-dtypes==0.4.1"
@@ -3428,10 +3427,10 @@
     },
     {
       "dependsOn": [
-        "llvmlite==0.47.0",
+        "llvmlite==0.48.0",
         "numpy==2.0.2"
       ],
-      "ref": "numba==0.65.1"
+      "ref": "numba==0.66.0"
     },
     {
       "ref": "numpy==2.0.2"
@@ -3444,13 +3443,13 @@
         "attrs==26.1.0",
         "numpy==2.0.2",
         "rich==15.0.0",
-        "typing_extensions==4.15.0"
+        "typing_extensions==4.16.0"
       ],
       "ref": "optree==0.19.1"
     },
     {
       "dependsOn": [
-        "setuptools==82.0.1",
+        "setuptools==83.0.0",
         "wheel==0.47.0"
       ],
       "ref": "packageurl-python==0.17.6"
@@ -3461,29 +3460,30 @@
     {
       "dependsOn": [
         "lxml==6.1.1",
-        "matplotlib==3.10.9",
-        "numba==0.65.1",
+        "matplotlib==3.11.1",
+        "numba==0.66.0",
         "numpy==2.0.2",
         "python-dateutil==2.9.0.post0",
         "pytz==2026.2",
-        "scipy==1.17.1",
-        "tzdata==2026.2"
+        "scipy==1.18.0",
+        "tzdata==2026.3"
       ],
       "ref": "pandas==2.2.3"
     },
     {
       "dependsOn": [
         "numpy==2.0.2",
-        "scipy==1.17.1"
+        "scipy==1.18.0"
       ],
       "ref": "patsy==1.0.2"
     },
     {
       "dependsOn": [
         "defusedxml==0.7.1",
-        "packaging==26.2"
+        "packaging==26.2",
+        "setuptools==83.0.0"
       ],
-      "ref": "pillow==12.2.0"
+      "ref": "pillow==12.3.0"
     },
     {
       "dependsOn": [
@@ -3494,9 +3494,9 @@
     },
     {
       "dependsOn": [
-        "wcwidth==0.7.0"
+        "wcwidth==0.8.2"
       ],
-      "ref": "prettytable==3.17.0"
+      "ref": "prettytable==3.18.0"
     },
     {
       "ref": "protobuf==5.29.6"
@@ -3512,14 +3512,14 @@
         "annotated-types==0.7.0",
         "pydantic_core==2.46.4",
         "typing-inspection==0.4.2",
-        "typing_extensions==4.15.0",
-        "tzdata==2026.2"
+        "typing_extensions==4.16.0",
+        "tzdata==2026.3"
       ],
       "ref": "pydantic==2.13.4"
     },
     {
       "dependsOn": [
-        "typing_extensions==4.15.0"
+        "typing_extensions==4.16.0"
       ],
       "ref": "pydantic_core==2.46.4"
     },
@@ -3538,17 +3538,17 @@
     {
       "dependsOn": [
         "attrs==26.1.0",
-        "rpds-py==0.30.0",
-        "typing_extensions==4.15.0"
+        "rpds-py==2026.6.3",
+        "typing_extensions==4.16.0"
       ],
       "ref": "referencing==0.37.0"
     },
     {
       "dependsOn": [
-        "certifi==2026.5.20",
+        "certifi==2026.6.17",
         "chardet==5.2.0",
-        "charset-normalizer==3.4.7",
-        "idna==3.16",
+        "charset-normalizer==3.4.9",
+        "idna==3.18",
         "urllib3==2.7.0"
       ],
       "ref": "requests==2.34.2"
@@ -3576,16 +3576,16 @@
       "ref": "rich==15.0.0"
     },
     {
-      "ref": "rpds-py==0.30.0"
+      "ref": "rpds-py==2026.6.3"
     },
     {
       "dependsOn": [
         "joblib==1.5.3",
-        "matplotlib==3.10.9",
+        "matplotlib==3.11.1",
         "numpy==2.0.2",
         "pandas==2.2.3",
-        "pillow==12.2.0",
-        "scipy==1.17.1",
+        "pillow==12.3.0",
+        "scipy==1.18.0",
         "seaborn==0.13.2",
         "threadpoolctl==3.6.0"
       ],
@@ -3593,12 +3593,12 @@
     },
     {
       "dependsOn": [
-        "matplotlib==3.10.9",
+        "matplotlib==3.11.1",
         "numpy==2.0.2",
         "threadpoolctl==3.6.0",
-        "typing_extensions==4.15.0"
+        "typing_extensions==4.16.0"
       ],
-      "ref": "scipy==1.17.1"
+      "ref": "scipy==1.18.0"
     },
     {
       "dependsOn": [
@@ -3619,10 +3619,10 @@
     },
     {
       "dependsOn": [
-        "matplotlib==3.10.9",
+        "matplotlib==3.11.1",
         "numpy==2.0.2",
         "pandas==2.2.3",
-        "scipy==1.17.1",
+        "scipy==1.18.0",
         "statsmodels==0.14.5"
       ],
       "ref": "seaborn==0.13.2"
@@ -3632,7 +3632,7 @@
         "packaging==26.2",
         "wheel==0.47.0"
       ],
-      "ref": "setuptools==82.0.1"
+      "ref": "setuptools==83.0.0"
     },
     {
       "ref": "six==1.17.0"
@@ -3641,10 +3641,10 @@
       "dependsOn": [
         "numpy==2.0.2",
         "packaging==26.2",
-        "prettytable==3.17.0",
+        "prettytable==3.18.0",
         "rich==15.0.0",
         "scikit-learn==1.5.2",
-        "scipy==1.17.1"
+        "scipy==1.18.0"
       ],
       "ref": "skops==0.13.0"
     },
@@ -3654,12 +3654,12 @@
     {
       "dependsOn": [
         "joblib==1.5.3",
-        "matplotlib==3.10.9",
+        "matplotlib==3.11.1",
         "numpy==2.0.2",
         "packaging==26.2",
         "pandas==2.2.3",
         "patsy==1.0.2",
-        "scipy==1.17.1"
+        "scipy==1.18.0"
       ],
       "ref": "statsmodels==0.14.5"
     },
@@ -3670,12 +3670,12 @@
       "dependsOn": [
         "Markdown==3.10.2",
         "Werkzeug==3.1.8",
-        "absl-py==2.4.0",
-        "grpcio==1.80.0",
+        "absl-py==2.5.0",
+        "grpcio==1.82.1",
         "numpy==2.0.2",
         "packaging==26.2",
         "protobuf==5.29.6",
-        "setuptools==82.0.1",
+        "setuptools==83.0.0",
         "six==1.17.0",
         "tensorboard-data-server==0.7.2"
       ],
@@ -3683,12 +3683,12 @@
     },
     {
       "dependsOn": [
-        "absl-py==2.4.0",
+        "absl-py==2.5.0",
         "astunparse==1.6.3",
         "flatbuffers==25.12.19",
         "gast==0.7.0",
         "google-pasta==0.2.0",
-        "grpcio==1.80.0",
+        "grpcio==1.82.1",
         "h5py==3.16.0",
         "keras==3.6.0",
         "libclang==18.1.1",
@@ -3698,12 +3698,12 @@
         "packaging==26.2",
         "protobuf==5.29.6",
         "requests==2.34.2",
-        "setuptools==82.0.1",
+        "setuptools==83.0.0",
         "six==1.17.0",
         "tensorboard==2.18.0",
         "termcolor==3.3.0",
-        "typing_extensions==4.15.0",
-        "wrapt==2.2.1"
+        "typing_extensions==4.16.0",
+        "wrapt==2.2.2"
       ],
       "ref": "tensorflow==2.18.0"
     },
@@ -3718,26 +3718,26 @@
         "h5py==3.16.0",
         "joblib==1.5.3",
         "keras==3.6.0",
-        "matplotlib==3.10.9",
-        "numba==0.65.1",
+        "matplotlib==3.11.1",
+        "numba==0.66.0",
         "numpy==2.0.2",
         "pandas==2.2.3",
         "scikit-learn==1.5.2",
-        "scipy==1.17.1"
+        "scipy==1.18.0"
       ],
       "ref": "tslearn==0.7.0"
     },
     {
       "dependsOn": [
-        "typing_extensions==4.15.0"
+        "typing_extensions==4.16.0"
       ],
       "ref": "typing-inspection==0.4.2"
     },
     {
-      "ref": "typing_extensions==4.15.0"
+      "ref": "typing_extensions==4.16.0"
     },
     {
-      "ref": "tzdata==2026.2"
+      "ref": "tzdata==2026.3"
     },
     {
       "ref": "uri-template==1.3.0"
@@ -3746,7 +3746,7 @@
       "ref": "urllib3==2.7.0"
     },
     {
-      "ref": "wcwidth==0.7.0"
+      "ref": "wcwidth==0.8.2"
     },
     {
       "ref": "webcolors==25.10.0"
@@ -3759,13 +3759,13 @@
     },
     {
       "dependsOn": [
-        "setuptools==82.0.1"
+        "setuptools==83.0.0"
       ],
-      "ref": "wrapt==2.2.1"
+      "ref": "wrapt==2.2.2"
     }
   ],
   "metadata": {
-    "timestamp": "2026-05-26T09:31:39.215012+00:00",
+    "timestamp": "2026-07-20T13:08:21.081277+00:00",
     "tools": {
       "components": [
         {
@@ -3864,12 +3864,12 @@
           ],
           "name": "cyclonedx-python-lib",
           "type": "library",
-          "version": "11.7.0"
+          "version": "11.11.0"
         }
       ]
     }
   },
-  "serialNumber": "urn:uuid:872791c5-ebed-4bfc-a6f5-820532502ce5",
+  "serialNumber": "urn:uuid:13cbbc7e-6f4b-40df-9f1e-4f6e89a99cd2",
   "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",
