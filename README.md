@@ -1,7 +1,7 @@
 # GENESIS Core Lib
 
 [![Python Version](https://img.shields.io/badge/python-3.12+-blue.svg)](https://python.org)
-[![License](https://img.shields.io/badge/license-AGPLv3-blue.svg)](LICENSE)
+[![License](https://shields.io/badge/license-Apache%202-blue)](LICENSE)
 [![PyPI Version](https://img.shields.io/pypi/v/sdg-core-lib.svg)](https://pypi.org/project/sdg-core-lib/)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/sdg-core-lib.svg)](https://pypi.org/project/sdg-core-lib/)
 [![Test and Build Lib](https://github.com/eng-genesis/genesis_core_lib/actions/workflows/lib-stable.yml/badge.svg)](https://github.com/eng-genesis/genesis_core_lib/actions/workflows/lib-stable.yml)
