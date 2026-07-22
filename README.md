@@ -138,7 +138,7 @@ A detailed Roadmap can be found following the Roadmap Link
 #### TL;DR
 **Pre-1.0**: Enhanced model quality, flexible architectures, advanced evaluation metrics, and expansion to images/text generation with auto hyperparameter tuning.
 
-**Post-1.0**: Production-ready stability, mixed data types, intelligent automation, cloud integration, and advanced AI capabilities including federated learning and quantum computing exploration. 
+**Post-1.0**: Production-ready stability, mixed data types, intelligent automation, cloud integration, and advanced AI models.
 
 ## 🤝 Contributing
 
